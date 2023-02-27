@@ -31,7 +31,9 @@ export class Login {
     const user = await this.userRepository.findByEmail(request.email);
 
     if (!user) {
-      return left(new UserNotFoundError(request.email));
+      return left(
+        new UserNotFoundError(`User with email '${request.email}' not found`),
+      );
     }
 
     const isPasswordCorrect = await this.passwordHasher.compare(
