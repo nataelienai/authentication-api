@@ -32,9 +32,7 @@ export class GetUser {
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
-      return left(
-        new UserNotFoundError('User not found for the provided token'),
-      );
+      return left(new UserNotFoundError(`User with id '${userId}' not found`));
     }
 
     return right({ user });
