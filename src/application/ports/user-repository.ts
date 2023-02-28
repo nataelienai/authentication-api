@@ -5,4 +5,5 @@ export interface UserRepository {
   existsByEmail(email: string): Promise<boolean>;
   findByEmail(email: string): Promise<User | null>;
   findById(userId: string): Promise<User | null>;
+  update(user: User): Promise<void>;
 }
