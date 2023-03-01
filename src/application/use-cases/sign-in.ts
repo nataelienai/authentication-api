@@ -6,17 +6,17 @@ import { PasswordHasher } from '../ports/password-hasher';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type LoginRequest = {
+type SignInRequest = {
   email: string;
   password: string;
 };
 
-type LoginResponse = {
+type SignInResponse = {
   user: User;
   token: string;
 };
 
-export class Login {
+export class SignIn {
   constructor(
     private readonly passwordHasher: PasswordHasher,
     private readonly userRepository: UserRepository,
@@ -24,9 +24,9 @@ export class Login {
   ) {}
 
   async execute(
-    request: LoginRequest,
+    request: SignInRequest,
   ): Promise<
-    Either<UserNotFoundError | IncorrectPasswordError, LoginResponse>
+    Either<UserNotFoundError | IncorrectPasswordError, SignInResponse>
   > {
     const user = await this.userRepository.findByEmail(request.email);
 
