@@ -1,6 +1,7 @@
 import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 import { UserNotFoundError } from '../errors/user-not-found-error';
+import { BlacklistedTokenRepository } from '../ports/blacklisted-token-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
@@ -12,6 +13,7 @@ export class DeleteUser {
   constructor(
     private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
+    private readonly blacklistedTokenRepository: BlacklistedTokenRepository,
   ) {}
 
   async execute(
@@ -21,6 +23,14 @@ export class DeleteUser {
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
+    }
+
+    const isTokenBlacklisted = await this.blacklistedTokenRepository.exists(
+      request.token,
+    );
+
+    if (isTokenBlacklisted) {
+      return left(new InvalidTokenError());
     }
 
     const { userId } = errorOrDecodedPayload.value;
