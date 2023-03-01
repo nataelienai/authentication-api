@@ -30,13 +30,15 @@ export class ChangeEmail {
       ChangeEmailResponse
     >
   > {
-    const errorOrUserId = await this.tokenService.decode(request.token);
+    const errorOrDecodedPlayload = await this.tokenService.decode(
+      request.token,
+    );
 
-    if (errorOrUserId.isLeft()) {
-      return left(errorOrUserId.value);
+    if (errorOrDecodedPlayload.isLeft()) {
+      return left(errorOrDecodedPlayload.value);
     }
 
-    const userId = errorOrUserId.value;
+    const { userId } = errorOrDecodedPlayload.value;
     const user = await this.userRepository.findById(userId);
 
     if (!user) {

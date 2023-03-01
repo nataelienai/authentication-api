@@ -17,13 +17,13 @@ export class DeleteUser {
   async execute(
     request: DeleteUserRequest,
   ): Promise<Either<InvalidTokenError | UserNotFoundError, void>> {
-    const errorOrUserId = await this.tokenService.decode(request.token);
+    const errorOrDecodedPayload = await this.tokenService.decode(request.token);
 
-    if (errorOrUserId.isLeft()) {
-      return left(errorOrUserId.value);
+    if (errorOrDecodedPayload.isLeft()) {
+      return left(errorOrDecodedPayload.value);
     }
 
-    const userId = errorOrUserId.value;
+    const { userId } = errorOrDecodedPayload.value;
     const userExists = await this.userRepository.existsById(userId);
 
     if (!userExists) {

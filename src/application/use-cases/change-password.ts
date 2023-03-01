@@ -32,13 +32,13 @@ export class ChangePassword {
       ChangePasswordResponse
     >
   > {
-    const errorOrUserId = await this.tokenService.decode(request.token);
+    const errorOrDecodedPayload = await this.tokenService.decode(request.token);
 
-    if (errorOrUserId.isLeft()) {
-      return left(errorOrUserId.value);
+    if (errorOrDecodedPayload.isLeft()) {
+      return left(errorOrDecodedPayload.value);
     }
 
-    const userId = errorOrUserId.value;
+    const { userId } = errorOrDecodedPayload.value;
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
