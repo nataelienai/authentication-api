@@ -7,7 +7,7 @@ import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
 type GetUserRequest = {
-  token: string;
+  accessToken: string;
 };
 
 type GetUserResponse = {
@@ -24,14 +24,16 @@ export class GetUser {
   async execute(
     request: GetUserRequest,
   ): Promise<Either<InvalidTokenError | UserNotFoundError, GetUserResponse>> {
-    const errorOrDecodedPayload = await this.tokenService.decode(request.token);
+    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+      request.accessToken,
+    );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
     }
 
     const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.token,
+      request.accessToken,
     );
 
     if (!sessionExists) {
