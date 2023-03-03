@@ -1,8 +1,10 @@
+import { Session } from '@/domain/session';
 import { User } from '@/domain/user';
 import { Either, left, right } from '@/shared/either';
 import { IncorrectPasswordError } from '../errors/incorrect-password-error';
 import { UserNotFoundError } from '../errors/user-not-found-error';
 import { PasswordHasher } from '../ports/password-hasher';
+import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
@@ -13,7 +15,7 @@ type SignInRequest = {
 
 type SignInResponse = {
   user: User;
-  token: string;
+  session: Session;
 };
 
 export class SignIn {
@@ -21,6 +23,7 @@ export class SignIn {
     private readonly passwordHasher: PasswordHasher,
     private readonly userRepository: UserRepository,
     private readonly tokenService: TokenService,
+    private readonly sessionRepository: SessionRepository,
   ) {}
 
   async execute(
@@ -45,8 +48,17 @@ export class SignIn {
       return left(new IncorrectPasswordError());
     }
 
-    const token = await this.tokenService.encode(user.id);
+    const accessToken = await this.tokenService.generateAccessToken(user.id);
+    const refreshToken = await this.tokenService.generateRefreshToken(user.id);
 
-    return right({ user, token });
+    const session = Session.create({
+      accessToken,
+      refreshToken,
+      userId: user.id,
+    });
+
+    await this.sessionRepository.create(session);
+
+    return right({ user, session });
   }
 }
