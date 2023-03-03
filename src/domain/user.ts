@@ -1,4 +1,5 @@
 import { Either, left, right } from '@/shared/either';
+import { Optional } from '@/shared/optional';
 import { randomUUID } from 'crypto';
 import { Email } from './email';
 import { InvalidTimestampsError } from './errors/invalid-timestamps-error';
@@ -11,8 +12,6 @@ interface UserProps {
   createdAt: Date;
   updatedAt: Date;
 }
-
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 type CreateUserProps = Optional<UserProps, 'id' | 'createdAt' | 'updatedAt'>;
 

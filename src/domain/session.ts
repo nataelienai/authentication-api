@@ -1,3 +1,4 @@
+import { Optional } from '@/shared/optional';
 import { randomUUID } from 'crypto';
 
 interface SessionProps {
@@ -6,8 +7,6 @@ interface SessionProps {
   refreshToken: string;
   userId: string;
 }
-
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 type CreateSessionProps = Optional<SessionProps, 'id'>;
 
