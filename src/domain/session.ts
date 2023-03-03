@@ -1,0 +1,47 @@
+import { randomUUID } from 'crypto';
+
+interface SessionProps {
+  id: string;
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+}
+
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+type CreateSessionProps = Optional<SessionProps, 'id'>;
+
+export class Session {
+  private constructor(private props: SessionProps) {}
+
+  get id() {
+    return this.props.id;
+  }
+
+  get accessToken() {
+    return this.props.accessToken;
+  }
+
+  set accessToken(accessToken: string) {
+    this.props.accessToken = accessToken;
+  }
+
+  get refreshToken() {
+    return this.props.refreshToken;
+  }
+
+  set refreshToken(refreshToken: string) {
+    this.props.refreshToken = refreshToken;
+  }
+
+  get userId() {
+    return this.props.userId;
+  }
+
+  static create(props: CreateSessionProps) {
+    return new Session({
+      ...props,
+      id: props.id ?? randomUUID(),
+    });
+  }
+}
