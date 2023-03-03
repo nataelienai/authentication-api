@@ -6,7 +6,7 @@ import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
 type DeleteUserRequest = {
-  token: string;
+  accessToken: string;
 };
 
 export class DeleteUser {
@@ -19,14 +19,16 @@ export class DeleteUser {
   async execute(
     request: DeleteUserRequest,
   ): Promise<Either<InvalidTokenError | UserNotFoundError, void>> {
-    const errorOrDecodedPayload = await this.tokenService.decode(request.token);
+    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+      request.accessToken,
+    );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
     }
 
     const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.token,
+      request.accessToken,
     );
 
     if (!sessionExists) {
