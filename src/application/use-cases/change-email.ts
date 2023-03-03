@@ -9,7 +9,7 @@ import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
 type ChangeEmailRequest = {
-  token: string;
+  accessToken: string;
   email: string;
 };
 
@@ -32,8 +32,8 @@ export class ChangeEmail {
       ChangeEmailResponse
     >
   > {
-    const errorOrDecodedPlayload = await this.tokenService.decode(
-      request.token,
+    const errorOrDecodedPlayload = await this.tokenService.decodeAccessToken(
+      request.accessToken,
     );
 
     if (errorOrDecodedPlayload.isLeft()) {
@@ -41,7 +41,7 @@ export class ChangeEmail {
     }
 
     const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.token,
+      request.accessToken,
     );
 
     if (!sessionExists) {
