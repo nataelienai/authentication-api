@@ -40,7 +40,9 @@ export class ChangeEmail {
       return left(errorOrDecodedPlayload.value);
     }
 
-    const sessionExists = await this.sessionRepository.exists(request.token);
+    const sessionExists = await this.sessionRepository.existsByAccessToken(
+      request.token,
+    );
 
     if (!sessionExists) {
       return left(new InvalidTokenError());

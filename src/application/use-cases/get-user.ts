@@ -30,7 +30,9 @@ export class GetUser {
       return left(errorOrDecodedPayload.value);
     }
 
-    const sessionExists = await this.sessionRepository.exists(request.token);
+    const sessionExists = await this.sessionRepository.existsByAccessToken(
+      request.token,
+    );
 
     if (!sessionExists) {
       return left(new InvalidTokenError());

@@ -22,7 +22,9 @@ export class SignOut {
       return left(errorOrDecodedPayload.value);
     }
 
-    const sessionExists = await this.sessionRepository.exists(token);
+    const sessionExists = await this.sessionRepository.existsByAccessToken(
+      token,
+    );
 
     if (!sessionExists) {
       return left(new InvalidTokenError());

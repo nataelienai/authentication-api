@@ -5,5 +5,5 @@ type TokenPayload = {
 
 export interface SessionRepository {
   create(tokenPayload: TokenPayload): Promise<void>;
-  exists(token: string): Promise<boolean>;
+  existsByAccessToken(accessToken: string): Promise<boolean>;
 }
