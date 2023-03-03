@@ -1,9 +1,7 @@
-type TokenPayload = {
-  token: string;
-  tokenExpiration: number;
-};
+import { Session } from '@/domain/session';
 
 export interface SessionRepository {
-  create(tokenPayload: TokenPayload): Promise<void>;
+  create(session: Session): Promise<void>;
   existsByAccessToken(accessToken: string): Promise<boolean>;
+  deleteByAccessToken(accessToken: string): Promise<void>;
 }
