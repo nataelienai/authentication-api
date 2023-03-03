@@ -10,7 +10,7 @@ import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
 type ChangePasswordRequest = {
-  token: string;
+  accessToken: string;
   password: string;
 };
 
@@ -34,14 +34,16 @@ export class ChangePassword {
       ChangePasswordResponse
     >
   > {
-    const errorOrDecodedPayload = await this.tokenService.decode(request.token);
+    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+      request.accessToken,
+    );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
     }
 
     const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.token,
+      request.accessToken,
     );
 
     if (!sessionExists) {
