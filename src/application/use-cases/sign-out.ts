@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
-import { BlacklistedTokenRepository } from '../ports/blacklisted-token-repository';
+import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 
 type SignOutRequest = {
@@ -10,7 +10,7 @@ type SignOutRequest = {
 export class SignOut {
   constructor(
     private readonly tokenService: TokenService,
-    private readonly blacklistedTokenRepository: BlacklistedTokenRepository,
+    private readonly sessionRepository: SessionRepository,
   ) {}
 
   async execute({
@@ -22,16 +22,14 @@ export class SignOut {
       return left(errorOrDecodedPayload.value);
     }
 
-    const isTokenBlacklisted = await this.blacklistedTokenRepository.exists(
-      token,
-    );
+    const sessionExists = await this.sessionRepository.exists(token);
 
-    if (isTokenBlacklisted) {
+    if (!sessionExists) {
       return left(new InvalidTokenError());
     }
 
     const { tokenExpiration } = errorOrDecodedPayload.value;
-    await this.blacklistedTokenRepository.create({ token, tokenExpiration });
+    await this.sessionRepository.create({ token, tokenExpiration });
 
     return right(undefined);
   }

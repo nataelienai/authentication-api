@@ -2,7 +2,7 @@ import { User } from '@/domain/user';
 import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 import { UserNotFoundError } from '../errors/user-not-found-error';
-import { BlacklistedTokenRepository } from '../ports/blacklisted-token-repository';
+import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
@@ -18,7 +18,7 @@ export class GetUser {
   constructor(
     private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
-    private readonly blacklistedTokenRepository: BlacklistedTokenRepository,
+    private readonly sessionRepository: SessionRepository,
   ) {}
 
   async execute(
@@ -30,11 +30,9 @@ export class GetUser {
       return left(errorOrDecodedPayload.value);
     }
 
-    const isTokenBlacklisted = await this.blacklistedTokenRepository.exists(
-      request.token,
-    );
+    const sessionExists = await this.sessionRepository.exists(request.token);
 
-    if (isTokenBlacklisted) {
+    if (!sessionExists) {
       return left(new InvalidTokenError());
     }
 

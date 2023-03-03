@@ -3,7 +3,7 @@ type TokenPayload = {
   tokenExpiration: number;
 };
 
-export interface BlacklistedTokenRepository {
+export interface SessionRepository {
   create(tokenPayload: TokenPayload): Promise<void>;
   exists(token: string): Promise<boolean>;
 }
