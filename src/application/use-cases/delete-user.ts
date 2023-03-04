@@ -42,7 +42,10 @@ export class DeleteUser {
       return left(new UserNotFoundError(`User with id '${userId}' not found`));
     }
 
-    await this.userRepository.deleteById(userId);
+    await Promise.all([
+      this.userRepository.deleteById(userId),
+      this.sessionRepository.deleteAllByUserId(userId),
+    ]);
 
     return right(undefined);
   }
