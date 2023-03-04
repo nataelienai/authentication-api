@@ -48,8 +48,10 @@ export class SignIn {
       return left(new IncorrectPasswordError());
     }
 
-    const accessToken = await this.tokenService.generateAccessToken(user.id);
-    const refreshToken = await this.tokenService.generateRefreshToken(user.id);
+    const [accessToken, refreshToken] = await Promise.all([
+      this.tokenService.generateAccessToken(user.id),
+      this.tokenService.generateRefreshToken(user.id),
+    ]);
 
     const session = Session.create({
       accessToken,
