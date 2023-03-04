@@ -3,10 +3,12 @@ import { InvalidEmailError } from '@/domain/errors/invalid-email-error';
 import { InvalidPasswordError } from '@/domain/errors/invalid-password-error';
 import { InvalidTimestampsError } from '@/domain/errors/invalid-timestamps-error';
 import { Password } from '@/domain/password';
+import { Session } from '@/domain/session';
 import { User } from '@/domain/user';
 import { Either, left, right } from '@/shared/either';
 import { EmailAlreadyExistsError } from '../errors/email-already-exists-error';
 import { PasswordHasher } from '../ports/password-hasher';
+import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
@@ -17,7 +19,7 @@ type SignUpRequest = {
 
 type SignUpResponse = {
   user: User;
-  token: string;
+  session: Session;
 };
 
 export class SignUp {
@@ -25,6 +27,7 @@ export class SignUp {
     private readonly passwordHasher: PasswordHasher,
     private readonly userRepository: UserRepository,
     private readonly tokenService: TokenService,
+    private readonly sessionRepository: SessionRepository,
   ) {}
 
   async execute(
@@ -68,8 +71,18 @@ export class SignUp {
     }
 
     await this.userRepository.create(user);
-    const token = await this.tokenService.encode(user.id);
 
-    return right({ user, token });
+    const accessToken = await this.tokenService.generateAccessToken(user.id);
+    const refreshToken = await this.tokenService.generateRefreshToken(user.id);
+
+    const session = Session.create({
+      accessToken,
+      refreshToken,
+      userId: user.id,
+    });
+
+    await this.sessionRepository.create(session);
+
+    return right({ user, session });
   }
 }
