@@ -6,11 +6,7 @@ import {
 } from '@/application/use-cases/change-password';
 import { Either } from '@/shared/either';
 import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
-
-type HttpRequest = {
-  headers: unknown;
-  body: unknown;
-};
+import { HttpRequest } from '../ports/http-request';
 
 type HttpResponse = {
   statusCode: number;

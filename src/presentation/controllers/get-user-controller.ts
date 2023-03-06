@@ -6,10 +6,7 @@ import {
 } from '@/application/use-cases/get-user';
 import { Either } from '@/shared/either';
 import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
-
-type HttpRequest = {
-  headers: unknown;
-};
+import { HttpRequest } from '../ports/http-request';
 
 type HttpResponse = {
   statusCode: number;
