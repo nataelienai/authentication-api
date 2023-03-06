@@ -9,12 +9,12 @@ import { PasswordHasher } from '../ports/password-hasher';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type ChangePasswordRequest = {
+export type ChangePasswordRequest = {
   accessToken: string;
   password: string;
 };
 
-type ChangePasswordResponse = {
+export type ChangePasswordResponse = {
   user: User;
 };
 
