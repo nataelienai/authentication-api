@@ -5,7 +5,7 @@ import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type DeleteUserRequest = {
+export type DeleteUserRequest = {
   accessToken: string;
 };
 
