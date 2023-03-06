@@ -8,12 +8,12 @@ import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type ChangeEmailRequest = {
+export type ChangeEmailRequest = {
   accessToken: string;
   email: string;
 };
 
-type ChangeEmailResponse = {
+export type ChangeEmailResponse = {
   user: User;
 };
 
