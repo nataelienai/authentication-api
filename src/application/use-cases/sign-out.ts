@@ -2,7 +2,7 @@ import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 import { SessionRepository } from '../ports/session-repository';
 
-type SignOutRequest = {
+export type SignOutRequest = {
   accessToken: string;
 };
 
