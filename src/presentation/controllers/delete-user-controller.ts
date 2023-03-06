@@ -3,25 +3,18 @@ import {
   DeleteUser,
   DeleteUserRequest,
 } from '@/application/use-cases/delete-user';
-import { Either } from '@/shared/either';
-import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 import { HttpRequest } from '../ports/http-request';
+import { HttpRequestValidator } from '../ports/http-request-validator';
 
 type HttpResponse = {
   statusCode: number;
   body?: Error;
 };
 
-interface HttpRequestValidator {
-  validate(
-    request: HttpRequest,
-  ): Either<InvalidHttpRequestError, DeleteUserRequest>;
-}
-
 export class DeleteUserController {
   constructor(
     private readonly deleteUser: DeleteUser,
-    private readonly httpRequestValidator: HttpRequestValidator,
+    private readonly httpRequestValidator: HttpRequestValidator<DeleteUserRequest>,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {

@@ -3,25 +3,18 @@ import {
   RefreshAccessTokenRequest,
   RefreshAccessTokenResponse,
 } from '@/application/use-cases/refresh-access-token';
-import { Either } from '@/shared/either';
-import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 import { HttpRequest } from '../ports/http-request';
+import { HttpRequestValidator } from '../ports/http-request-validator';
 
 type HttpResponse = {
   statusCode: number;
   body: RefreshAccessTokenResponse | Error;
 };
 
-interface HttpRequestValidator {
-  validate(
-    request: HttpRequest,
-  ): Either<InvalidHttpRequestError, RefreshAccessTokenRequest>;
-}
-
 export class RefreshAccessTokenController {
   constructor(
     private readonly refreshAccessToken: RefreshAccessToken,
-    private readonly httpRequestValidator: HttpRequestValidator,
+    private readonly httpRequestValidator: HttpRequestValidator<RefreshAccessTokenRequest>,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {

@@ -4,25 +4,18 @@ import {
   ChangePasswordRequest,
   ChangePasswordResponse,
 } from '@/application/use-cases/change-password';
-import { Either } from '@/shared/either';
-import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 import { HttpRequest } from '../ports/http-request';
+import { HttpRequestValidator } from '../ports/http-request-validator';
 
 type HttpResponse = {
   statusCode: number;
   body: ChangePasswordResponse | Error;
 };
 
-interface HttpRequestValidator {
-  validate(
-    request: HttpRequest,
-  ): Either<InvalidHttpRequestError, ChangePasswordRequest>;
-}
-
 export class ChangePasswordController {
   constructor(
     private readonly changePassword: ChangePassword,
-    private readonly httpRequestValidator: HttpRequestValidator,
+    private readonly httpRequestValidator: HttpRequestValidator<ChangePasswordRequest>,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {

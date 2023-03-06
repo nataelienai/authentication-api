@@ -4,25 +4,18 @@ import {
   ChangeEmailRequest,
   ChangeEmailResponse,
 } from '@/application/use-cases/change-email';
-import { Either } from '@/shared/either';
-import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 import { HttpRequest } from '../ports/http-request';
+import { HttpRequestValidator } from '../ports/http-request-validator';
 
 type HttpResponse = {
   statusCode: number;
   body: ChangeEmailResponse | Error;
 };
 
-interface HttpRequestValidator {
-  validate(
-    request: HttpRequest,
-  ): Either<InvalidHttpRequestError, ChangeEmailRequest>;
-}
-
 export class ChangeEmailController {
   constructor(
     private readonly changeEmail: ChangeEmail,
-    private readonly httpRequestValidator: HttpRequestValidator,
+    private readonly httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {

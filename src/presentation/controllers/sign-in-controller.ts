@@ -4,25 +4,18 @@ import {
   SignInRequest,
   SignInResponse,
 } from '@/application/use-cases/sign-in';
-import { Either } from '@/shared/either';
-import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 import { HttpRequest } from '../ports/http-request';
+import { HttpRequestValidator } from '../ports/http-request-validator';
 
 type HttpResponse = {
   statusCode: number;
   body: SignInResponse | Error;
 };
 
-interface HttpRequestValidator {
-  validate(
-    request: HttpRequest,
-  ): Either<InvalidHttpRequestError, SignInRequest>;
-}
-
 export class SignInController {
   constructor(
     private readonly signIn: SignIn,
-    private readonly httpRequestValidator: HttpRequestValidator,
+    private readonly httpRequestValidator: HttpRequestValidator<SignInRequest>,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {
