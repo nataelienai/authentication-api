@@ -4,11 +4,11 @@ import { InvalidTokenError } from '../errors/invalid-token-error';
 import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 
-type RefreshAccessTokenRequest = {
+export type RefreshAccessTokenRequest = {
   refreshToken: string;
 };
 
-type RefreshAccessTokenResponse = {
+export type RefreshAccessTokenResponse = {
   session: Session;
 };
 
