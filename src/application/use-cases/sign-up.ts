@@ -12,12 +12,12 @@ import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type SignUpRequest = {
+export type SignUpRequest = {
   email: string;
   password: string;
 };
 
-type SignUpResponse = {
+export type SignUpResponse = {
   user: User;
   session: Session;
 };
