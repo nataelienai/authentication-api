@@ -8,7 +8,7 @@ import { Either } from '@/shared/either';
 import { InvalidHttpRequestError } from '../errors/invalid-http-request-error';
 
 type HttpRequest = {
-  body: unknown;
+  headers: unknown;
 };
 
 type HttpResponse = {
