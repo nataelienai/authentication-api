@@ -6,11 +6,11 @@ import { SessionRepository } from '../ports/session-repository';
 import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
 
-type GetUserRequest = {
+export type GetUserRequest = {
   accessToken: string;
 };
 
-type GetUserResponse = {
+export type GetUserResponse = {
   user: User;
 };
 
