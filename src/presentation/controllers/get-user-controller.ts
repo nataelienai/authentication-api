@@ -4,27 +4,24 @@ import {
   GetUserRequest,
   GetUserResponse,
 } from '@/application/use-cases/get-user';
-import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { Controller } from './controller';
 
-export class GetUserController {
+export class GetUserController extends Controller<
+  GetUserRequest,
+  GetUserResponse
+> {
   constructor(
     private readonly getUser: GetUser,
-    private readonly httpRequestValidator: HttpRequestValidator<GetUserRequest>,
-  ) {}
+    httpRequestValidator: HttpRequestValidator<GetUserRequest>,
+  ) {
+    super(httpRequestValidator);
+  }
 
-  async handle(
-    request: HttpRequest,
+  async execute(
+    getUserRequest: GetUserRequest,
   ): Promise<HttpResponse<Error | GetUserResponse>> {
-    const errorOrGetUserRequest = this.httpRequestValidator.validate(request);
-
-    if (errorOrGetUserRequest.isLeft()) {
-      const error = errorOrGetUserRequest.value;
-      return { statusCode: 400, body: error };
-    }
-
-    const getUserRequest = errorOrGetUserRequest.value;
     const errorOrGetUserResponse = await this.getUser.execute(getUserRequest);
 
     if (errorOrGetUserResponse.isLeft()) {
