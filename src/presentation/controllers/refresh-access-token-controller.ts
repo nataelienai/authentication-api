@@ -18,7 +18,7 @@ export class RefreshAccessTokenController extends Controller<
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     refreshAccessTokenRequest: RefreshAccessTokenRequest,
   ): Promise<HttpResponse<Error | RefreshAccessTokenResponse>> {
     const errorOrRefreshAccessTokenResponse =

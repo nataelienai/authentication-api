@@ -15,7 +15,7 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     deleteUserRequest: DeleteUserRequest,
   ): Promise<HttpResponse<Error | void>> {
     const errorOrVoid = await this.deleteUser.execute(deleteUserRequest);

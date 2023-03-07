@@ -19,7 +19,7 @@ export class ChangePasswordController extends Controller<
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     changePasswordRequest: ChangePasswordRequest,
   ): Promise<HttpResponse<Error | ChangePasswordResponse>> {
     const errorOrChangePasswordResponse = await this.changePassword.execute(

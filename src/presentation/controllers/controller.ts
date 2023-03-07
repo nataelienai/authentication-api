@@ -17,5 +17,7 @@ export abstract class Controller<T, U> {
     return this.execute(useCaseRequest);
   }
 
-  public abstract execute(useCaseRequest: T): Promise<HttpResponse<Error | U>>;
+  protected abstract execute(
+    useCaseRequest: T,
+  ): Promise<HttpResponse<Error | U>>;
 }

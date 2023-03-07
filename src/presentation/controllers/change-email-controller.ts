@@ -19,7 +19,7 @@ export class ChangeEmailController extends Controller<
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     changeEmailRequest: ChangeEmailRequest,
   ): Promise<HttpResponse<Error | ChangeEmailResponse>> {
     const errorOrChangeEmailResponse = await this.changeEmail.execute(

@@ -19,7 +19,7 @@ export class GetUserController extends Controller<
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     getUserRequest: GetUserRequest,
   ): Promise<HttpResponse<Error | GetUserResponse>> {
     const errorOrGetUserResponse = await this.getUser.execute(getUserRequest);

@@ -11,7 +11,7 @@ export class SignOutController extends Controller<SignOutRequest, void> {
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     signOutRequest: SignOutRequest,
   ): Promise<HttpResponse<Error | void>> {
     const errorOrVoid = await this.signOut.execute(signOutRequest);

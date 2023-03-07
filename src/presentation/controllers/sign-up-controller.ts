@@ -19,7 +19,7 @@ export class SignUpController extends Controller<
     super(httpRequestValidator);
   }
 
-  async execute(
+  protected async execute(
     signUpRequest: SignUpRequest,
   ): Promise<HttpResponse<Error | SignUpResponse>> {
     const errorOrSignUpResponse = await this.signUp.execute(signUpRequest);
