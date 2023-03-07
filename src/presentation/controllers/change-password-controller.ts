@@ -4,28 +4,24 @@ import {
   ChangePasswordRequest,
   ChangePasswordResponse,
 } from '@/application/use-cases/change-password';
-import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { Controller } from './controller';
 
-export class ChangePasswordController {
+export class ChangePasswordController extends Controller<
+  ChangePasswordRequest,
+  ChangePasswordResponse
+> {
   constructor(
     private readonly changePassword: ChangePassword,
-    private readonly httpRequestValidator: HttpRequestValidator<ChangePasswordRequest>,
-  ) {}
+    httpRequestValidator: HttpRequestValidator<ChangePasswordRequest>,
+  ) {
+    super(httpRequestValidator);
+  }
 
-  async handle(
-    request: HttpRequest,
+  async execute(
+    changePasswordRequest: ChangePasswordRequest,
   ): Promise<HttpResponse<Error | ChangePasswordResponse>> {
-    const errorOrChangePasswordRequest =
-      this.httpRequestValidator.validate(request);
-
-    if (errorOrChangePasswordRequest.isLeft()) {
-      const error = errorOrChangePasswordRequest.value;
-      return { statusCode: 400, body: error };
-    }
-
-    const changePasswordRequest = errorOrChangePasswordRequest.value;
     const errorOrChangePasswordResponse = await this.changePassword.execute(
       changePasswordRequest,
     );
