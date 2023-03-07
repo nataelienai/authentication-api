@@ -4,28 +4,24 @@ import {
   ChangeEmailRequest,
   ChangeEmailResponse,
 } from '@/application/use-cases/change-email';
-import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { Controller } from './controller';
 
-export class ChangeEmailController {
+export class ChangeEmailController extends Controller<
+  ChangeEmailRequest,
+  ChangeEmailResponse
+> {
   constructor(
     private readonly changeEmail: ChangeEmail,
-    private readonly httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
-  ) {}
+    httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
+  ) {
+    super(httpRequestValidator);
+  }
 
-  async handle(
-    request: HttpRequest,
+  async execute(
+    changeEmailRequest: ChangeEmailRequest,
   ): Promise<HttpResponse<Error | ChangeEmailResponse>> {
-    const errorOrChangeEmailRequest =
-      this.httpRequestValidator.validate(request);
-
-    if (errorOrChangeEmailRequest.isLeft()) {
-      const error = errorOrChangeEmailRequest.value;
-      return { statusCode: 400, body: error };
-    }
-
-    const changeEmailRequest = errorOrChangeEmailRequest.value;
     const errorOrChangeEmailResponse = await this.changeEmail.execute(
       changeEmailRequest,
     );
