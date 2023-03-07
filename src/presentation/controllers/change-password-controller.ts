@@ -6,11 +6,7 @@ import {
 } from '@/application/use-cases/change-password';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body: ChangePasswordResponse | Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class ChangePasswordController {
   constructor(
@@ -18,7 +14,9 @@ export class ChangePasswordController {
     private readonly httpRequestValidator: HttpRequestValidator<ChangePasswordRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(
+    request: HttpRequest,
+  ): Promise<HttpResponse<Error | ChangePasswordResponse>> {
     const errorOrChangePasswordRequest =
       this.httpRequestValidator.validate(request);
 

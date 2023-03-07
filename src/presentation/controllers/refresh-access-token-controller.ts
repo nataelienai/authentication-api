@@ -5,11 +5,7 @@ import {
 } from '@/application/use-cases/refresh-access-token';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body: RefreshAccessTokenResponse | Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class RefreshAccessTokenController {
   constructor(
@@ -17,7 +13,9 @@ export class RefreshAccessTokenController {
     private readonly httpRequestValidator: HttpRequestValidator<RefreshAccessTokenRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(
+    request: HttpRequest,
+  ): Promise<HttpResponse<Error | RefreshAccessTokenResponse>> {
     const errorOrRefreshAccessTokenRequest =
       this.httpRequestValidator.validate(request);
 

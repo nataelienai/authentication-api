@@ -5,11 +5,7 @@ import {
 } from '@/application/use-cases/delete-user';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body?: Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class DeleteUserController {
   constructor(
@@ -17,7 +13,7 @@ export class DeleteUserController {
     private readonly httpRequestValidator: HttpRequestValidator<DeleteUserRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(request: HttpRequest): Promise<HttpResponse<Error | void>> {
     const errorOrDeleteUserRequest =
       this.httpRequestValidator.validate(request);
 
@@ -39,6 +35,6 @@ export class DeleteUserController {
       return { statusCode: 400, body: error };
     }
 
-    return { statusCode: 204 };
+    return { statusCode: 204, body: undefined };
   }
 }

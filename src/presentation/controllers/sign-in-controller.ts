@@ -6,11 +6,7 @@ import {
 } from '@/application/use-cases/sign-in';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body: SignInResponse | Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class SignInController {
   constructor(
@@ -18,7 +14,9 @@ export class SignInController {
     private readonly httpRequestValidator: HttpRequestValidator<SignInRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(
+    request: HttpRequest,
+  ): Promise<HttpResponse<Error | SignInResponse>> {
     const errorOrSignInRequest = this.httpRequestValidator.validate(request);
 
     if (errorOrSignInRequest.isLeft()) {

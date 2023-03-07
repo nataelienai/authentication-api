@@ -6,11 +6,7 @@ import {
 } from '@/application/use-cases/change-email';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body: ChangeEmailResponse | Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class ChangeEmailController {
   constructor(
@@ -18,7 +14,9 @@ export class ChangeEmailController {
     private readonly httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(
+    request: HttpRequest,
+  ): Promise<HttpResponse<Error | ChangeEmailResponse>> {
     const errorOrChangeEmailRequest =
       this.httpRequestValidator.validate(request);
 

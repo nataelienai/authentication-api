@@ -1,11 +1,7 @@
 import { SignOut, SignOutRequest } from '@/application/use-cases/sign-out';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
-
-type HttpResponse = {
-  statusCode: number;
-  body?: Error;
-};
+import { HttpResponse } from '../ports/http-response';
 
 export class SignOutController {
   constructor(
@@ -13,7 +9,7 @@ export class SignOutController {
     private readonly httpRequestValidator: HttpRequestValidator<SignOutRequest>,
   ) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(request: HttpRequest): Promise<HttpResponse<Error | void>> {
     const errorOrSignOutRequest = this.httpRequestValidator.validate(request);
 
     if (errorOrSignOutRequest.isLeft()) {
@@ -29,6 +25,6 @@ export class SignOutController {
       return { statusCode: 400, body: error };
     }
 
-    return { statusCode: 204 };
+    return { statusCode: 204, body: undefined };
   }
 }
