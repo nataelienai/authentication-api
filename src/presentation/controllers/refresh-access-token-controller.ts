@@ -3,28 +3,24 @@ import {
   RefreshAccessTokenRequest,
   RefreshAccessTokenResponse,
 } from '@/application/use-cases/refresh-access-token';
-import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { Controller } from './controller';
 
-export class RefreshAccessTokenController {
+export class RefreshAccessTokenController extends Controller<
+  RefreshAccessTokenRequest,
+  RefreshAccessTokenResponse
+> {
   constructor(
     private readonly refreshAccessToken: RefreshAccessToken,
-    private readonly httpRequestValidator: HttpRequestValidator<RefreshAccessTokenRequest>,
-  ) {}
+    httpRequestValidator: HttpRequestValidator<RefreshAccessTokenRequest>,
+  ) {
+    super(httpRequestValidator);
+  }
 
-  async handle(
-    request: HttpRequest,
+  async execute(
+    refreshAccessTokenRequest: RefreshAccessTokenRequest,
   ): Promise<HttpResponse<Error | RefreshAccessTokenResponse>> {
-    const errorOrRefreshAccessTokenRequest =
-      this.httpRequestValidator.validate(request);
-
-    if (errorOrRefreshAccessTokenRequest.isLeft()) {
-      const error = errorOrRefreshAccessTokenRequest.value;
-      return { statusCode: 400, body: error };
-    }
-
-    const refreshAccessTokenRequest = errorOrRefreshAccessTokenRequest.value;
     const errorOrRefreshAccessTokenResponse =
       await this.refreshAccessToken.execute(refreshAccessTokenRequest);
 
