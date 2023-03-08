@@ -7,6 +7,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class SignInController extends Controller<
@@ -31,13 +32,13 @@ export class SignInController extends Controller<
       const error = errorOrSignInResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return { statusCode: 404, body: error };
+        return notFound(error);
       }
 
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
     const signInResponse = errorOrSignInResponse.value;
-    return { statusCode: 200, body: signInResponse };
+    return ok(signInResponse);
   }
 }
