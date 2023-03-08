@@ -6,6 +6,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, noContent, notFound } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class DeleteUserController extends Controller<DeleteUserRequest, void> {
@@ -27,12 +28,12 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
       const error = errorOrVoid.value;
 
       if (error instanceof UserNotFoundError) {
-        return { statusCode: 404, body: error };
+        return notFound(error);
       }
 
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
-    return { statusCode: 204, body: undefined };
+    return noContent(undefined);
   }
 }
