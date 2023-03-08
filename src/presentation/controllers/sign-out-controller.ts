@@ -2,6 +2,7 @@ import { SignOut, SignOutRequest } from '@/application/use-cases/sign-out';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, noContent } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class SignOutController extends Controller<SignOutRequest, void> {
@@ -21,9 +22,9 @@ export class SignOutController extends Controller<SignOutRequest, void> {
 
     if (errorOrVoid.isLeft()) {
       const error = errorOrVoid.value;
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
-    return { statusCode: 204, body: undefined };
+    return noContent(undefined);
   }
 }
