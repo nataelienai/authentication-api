@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/get-user';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { HttpServer } from '../ports/http-server';
 import { Controller } from './controller';
 
 export class GetUserController extends Controller<
@@ -15,8 +16,10 @@ export class GetUserController extends Controller<
   constructor(
     private readonly getUser: GetUser,
     httpRequestValidator: HttpRequestValidator<GetUserRequest>,
+    httpServer: HttpServer,
   ) {
     super(httpRequestValidator);
+    httpServer.on('get', '/user', this);
   }
 
   protected async execute(
