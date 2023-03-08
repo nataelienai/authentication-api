@@ -6,6 +6,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class RefreshAccessTokenController extends Controller<
@@ -29,10 +30,10 @@ export class RefreshAccessTokenController extends Controller<
 
     if (errorOrRefreshAccessTokenResponse.isLeft()) {
       const error = errorOrRefreshAccessTokenResponse.value;
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
     const refreshAccessTokenResponse = errorOrRefreshAccessTokenResponse.value;
-    return { statusCode: 200, body: refreshAccessTokenResponse };
+    return ok(refreshAccessTokenResponse);
   }
 }
