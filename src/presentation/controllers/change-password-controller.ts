@@ -7,6 +7,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class ChangePasswordController extends Controller<
@@ -33,13 +34,13 @@ export class ChangePasswordController extends Controller<
       const error = errorOrChangePasswordResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return { statusCode: 404, body: error };
+        return notFound(error);
       }
 
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
     const changePasswordResponse = errorOrChangePasswordResponse.value;
-    return { statusCode: 200, body: changePasswordResponse };
+    return ok(changePasswordResponse);
   }
 }
