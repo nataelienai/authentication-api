@@ -5,14 +5,17 @@ import {
 } from '@/application/use-cases/delete-user';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { HttpServer } from '../ports/http-server';
 import { Controller } from './controller';
 
 export class DeleteUserController extends Controller<DeleteUserRequest, void> {
   constructor(
     private readonly deleteUser: DeleteUser,
     httpRequestValidator: HttpRequestValidator<DeleteUserRequest>,
+    httpServer: HttpServer,
   ) {
     super(httpRequestValidator);
+    httpServer.on('delete', '/user', this);
   }
 
   protected async execute(
