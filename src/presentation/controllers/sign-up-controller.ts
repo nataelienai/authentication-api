@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/sign-up';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { HttpServer } from '../ports/http-server';
 import { Controller } from './controller';
 
 export class SignUpController extends Controller<
@@ -15,8 +16,10 @@ export class SignUpController extends Controller<
   constructor(
     private readonly signUp: SignUp,
     httpRequestValidator: HttpRequestValidator<SignUpRequest>,
+    httpServer: HttpServer,
   ) {
     super(httpRequestValidator);
+    httpServer.on('post', '/sign-up', this);
   }
 
   protected async execute(
