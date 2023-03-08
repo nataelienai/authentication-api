@@ -7,6 +7,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class ChangeEmailController extends Controller<
@@ -33,13 +34,13 @@ export class ChangeEmailController extends Controller<
       const error = errorOrChangeEmailResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return { statusCode: 404, body: error };
+        return notFound(error);
       }
 
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
     const changeEmailResponse = errorOrChangeEmailResponse.value;
-    return { statusCode: 200, body: changeEmailResponse };
+    return ok(changeEmailResponse);
   }
 }
