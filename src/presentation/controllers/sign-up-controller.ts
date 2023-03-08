@@ -7,6 +7,7 @@ import {
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
+import { badRequest, conflict, created } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class SignUpController extends Controller<
@@ -31,13 +32,13 @@ export class SignUpController extends Controller<
       const error = errorOrSignUpResponse.value;
 
       if (error instanceof EmailAlreadyExistsError) {
-        return { statusCode: 409, body: error };
+        return conflict(error);
       }
 
-      return { statusCode: 400, body: error };
+      return badRequest(error);
     }
 
     const signUpResponse = errorOrSignUpResponse.value;
-    return { statusCode: 201, body: signUpResponse };
+    return created(signUpResponse);
   }
 }
