@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/change-email';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { HttpServer } from '../ports/http-server';
 import { Controller } from './controller';
 
 export class ChangeEmailController extends Controller<
@@ -15,8 +16,10 @@ export class ChangeEmailController extends Controller<
   constructor(
     private readonly changeEmail: ChangeEmail,
     httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
+    httpServer: HttpServer,
   ) {
     super(httpRequestValidator);
+    httpServer.on('patch', '/user/email', this);
   }
 
   protected async execute(
