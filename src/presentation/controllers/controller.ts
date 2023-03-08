@@ -1,8 +1,9 @@
+import { HttpController } from '../ports/http-controller';
 import { HttpRequest } from '../ports/http-request';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
 
-export abstract class Controller<T, U> {
+export abstract class Controller<T, U> implements HttpController {
   constructor(private readonly httpRequestValidator: HttpRequestValidator<T>) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse<Error | U>> {
