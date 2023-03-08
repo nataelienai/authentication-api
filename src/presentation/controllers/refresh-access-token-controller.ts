@@ -5,6 +5,7 @@ import {
 } from '@/application/use-cases/refresh-access-token';
 import { HttpRequestValidator } from '../ports/http-request-validator';
 import { HttpResponse } from '../ports/http-response';
+import { HttpServer } from '../ports/http-server';
 import { Controller } from './controller';
 
 export class RefreshAccessTokenController extends Controller<
@@ -14,8 +15,10 @@ export class RefreshAccessTokenController extends Controller<
   constructor(
     private readonly refreshAccessToken: RefreshAccessToken,
     httpRequestValidator: HttpRequestValidator<RefreshAccessTokenRequest>,
+    httpServer: HttpServer,
   ) {
     super(httpRequestValidator);
+    httpServer.on('post', '/token', this);
   }
 
   protected async execute(
