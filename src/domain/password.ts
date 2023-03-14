@@ -1,10 +1,12 @@
 import { Either, left, right } from '@/shared/either';
 import { InvalidPasswordError } from './errors/invalid-password-error';
 
-const PASSWORD_REGEXP = /^[A-Za-z0-9~!@#$%^&*_\-+=`|\\(){}[\]:;"'<>,.?/]+$/;
-const PASSWORD_MIN_LENGTH = 8;
-
 export class Password {
+  private static readonly FORMAT_REGEXP =
+    /^[A-Za-z0-9~!@#$%^&*_\-+=`|\\(){}[\]:;"'<>,.?/]+$/;
+
+  private static readonly MIN_LENGTH = 8;
+
   private constructor(private readonly password: string) {}
 
   get value() {
@@ -15,7 +17,7 @@ export class Password {
     if (!this.hasMinLength(password)) {
       return left(
         new InvalidPasswordError(
-          `The password must be at least ${PASSWORD_MIN_LENGTH} characters long`,
+          `The password must be at least ${Password.MIN_LENGTH} characters long`,
         ),
       );
     }
@@ -32,10 +34,10 @@ export class Password {
   }
 
   static hasMinLength(password: string) {
-    return password.length < PASSWORD_MIN_LENGTH;
+    return password.length < Password.MIN_LENGTH;
   }
 
   static hasValidCharacters(password: string) {
-    return password.match(PASSWORD_REGEXP);
+    return password.match(Password.FORMAT_REGEXP);
   }
 }
