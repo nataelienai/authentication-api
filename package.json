@@ -54,6 +54,7 @@
     "@prisma/client": "^4.11.0",
     "bcrypt": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
-    "redis": "^4.6.5"
+    "redis": "^4.6.5",
+    "zod": "^3.21.4"
   }
 }
