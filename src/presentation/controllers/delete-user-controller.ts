@@ -3,7 +3,7 @@ import {
   DeleteUser,
   DeleteUserRequest,
 } from '@/application/use-cases/delete-user';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, noContent, notFound } from '../utils/http-responses';
@@ -12,10 +12,10 @@ import { Controller } from './controller';
 export class DeleteUserController extends Controller<DeleteUserRequest, void> {
   constructor(
     private readonly deleteUser: DeleteUser,
-    httpRequestValidator: HttpRequestValidator<DeleteUserRequest>,
+    httpRequestParser: HttpRequestParser<DeleteUserRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('delete', '/user', this);
   }
 

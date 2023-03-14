@@ -4,7 +4,7 @@ import {
   ChangeEmailRequest,
   ChangeEmailResponse,
 } from '@/application/use-cases/change-email';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
@@ -16,10 +16,10 @@ export class ChangeEmailController extends Controller<
 > {
   constructor(
     private readonly changeEmail: ChangeEmail,
-    httpRequestValidator: HttpRequestValidator<ChangeEmailRequest>,
+    httpRequestParser: HttpRequestParser<ChangeEmailRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('patch', '/user/email', this);
   }
 

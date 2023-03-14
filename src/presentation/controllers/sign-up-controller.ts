@@ -4,7 +4,7 @@ import {
   SignUpRequest,
   SignUpResponse,
 } from '@/application/use-cases/sign-up';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, conflict, created } from '../utils/http-responses';
@@ -16,10 +16,10 @@ export class SignUpController extends Controller<
 > {
   constructor(
     private readonly signUp: SignUp,
-    httpRequestValidator: HttpRequestValidator<SignUpRequest>,
+    httpRequestParser: HttpRequestParser<SignUpRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('post', '/sign-up', this);
   }
 

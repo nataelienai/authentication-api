@@ -1,14 +1,14 @@
 import { HttpController } from '../ports/http-controller';
 import { HttpRequest } from '../ports/http-request';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { badRequest } from '../utils/http-responses';
 
 export abstract class Controller<T, U> implements HttpController {
-  constructor(private readonly httpRequestValidator: HttpRequestValidator<T>) {}
+  constructor(private readonly httpRequestParser: HttpRequestParser<T>) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse<Error | U>> {
-    const errorOrUseCaseRequest = this.httpRequestValidator.validate(request);
+    const errorOrUseCaseRequest = this.httpRequestParser.parse(request);
 
     if (errorOrUseCaseRequest.isLeft()) {
       const error = errorOrUseCaseRequest.value;

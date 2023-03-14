@@ -4,7 +4,7 @@ import {
   GetUserRequest,
   GetUserResponse,
 } from '@/application/use-cases/get-user';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
@@ -16,10 +16,10 @@ export class GetUserController extends Controller<
 > {
   constructor(
     private readonly getUser: GetUser,
-    httpRequestValidator: HttpRequestValidator<GetUserRequest>,
+    httpRequestParser: HttpRequestParser<GetUserRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('get', '/user', this);
   }
 

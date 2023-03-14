@@ -4,7 +4,7 @@ import {
   SignInRequest,
   SignInResponse,
 } from '@/application/use-cases/sign-in';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
@@ -16,10 +16,10 @@ export class SignInController extends Controller<
 > {
   constructor(
     private readonly signIn: SignIn,
-    httpRequestValidator: HttpRequestValidator<SignInRequest>,
+    httpRequestParser: HttpRequestParser<SignInRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('post', '/sign-in', this);
   }
 

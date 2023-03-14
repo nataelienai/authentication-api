@@ -4,7 +4,7 @@ import {
   ChangePasswordRequest,
   ChangePasswordResponse,
 } from '@/application/use-cases/change-password';
-import { HttpRequestValidator } from '../ports/http-request-validator';
+import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
@@ -16,10 +16,10 @@ export class ChangePasswordController extends Controller<
 > {
   constructor(
     private readonly changePassword: ChangePassword,
-    httpRequestValidator: HttpRequestValidator<ChangePasswordRequest>,
+    httpRequestParser: HttpRequestParser<ChangePasswordRequest>,
     httpServer: HttpServer,
   ) {
-    super(httpRequestValidator);
+    super(httpRequestParser);
     httpServer.on('patch', '/user/password', this);
   }
 
