@@ -16,7 +16,7 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async create(session: Session) {
-    await this.redis.json.set(this.makeKey(session.id), '$', {
+    await this.redis.json.set(RedisSessionRepository.makeKey(session.id), '$', {
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
       userId: session.userId,
@@ -24,7 +24,7 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async update(session: Session) {
-    await this.redis.json.set(this.makeKey(session.id), '$', {
+    await this.redis.json.set(RedisSessionRepository.makeKey(session.id), '$', {
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
       userId: session.userId,
@@ -54,7 +54,7 @@ export class RedisSessionRepository implements SessionRepository {
     }
 
     return Session.create({
-      id: this.extractIdFromKey(document.id),
+      id: RedisSessionRepository.extractIdFromKey(document.id),
       accessToken: document.value.accessToken,
       refreshToken: document.value.refreshToken,
       userId: document.value.userId,
@@ -128,13 +128,11 @@ export class RedisSessionRepository implements SessionRepository {
     return true;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private makeKey(id: string) {
+  private static makeKey(id: string) {
     return `${RedisSessionRepository.KEY_PREFIX}${id}`;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private extractIdFromKey(key: string) {
+  private static extractIdFromKey(key: string) {
     return key.slice(RedisSessionRepository.KEY_PREFIX.length);
   }
 }
