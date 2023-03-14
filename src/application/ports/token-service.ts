@@ -1,9 +1,8 @@
 import { Either } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 
-type DecodedPayload = {
+export type DecodedPayload = {
   userId: string;
-  tokenExpiration: number;
 };
 
 export interface TokenService {
