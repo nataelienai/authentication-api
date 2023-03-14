@@ -3,9 +3,9 @@ import { Session } from '@/domain/session';
 import { ErrorReply, RedisClientType, SchemaFieldTypes } from 'redis';
 
 export class RedisSessionRepository implements SessionRepository {
-  private readonly INDEX_NAME = 'idx:session';
+  private static readonly INDEX_NAME = 'idx:session';
 
-  private readonly KEY_PREFIX = 'session:';
+  private static readonly KEY_PREFIX = 'session:';
 
   private constructor(private readonly redis: RedisClientType) {}
 
@@ -33,7 +33,7 @@ export class RedisSessionRepository implements SessionRepository {
 
   async findByRefreshToken(refreshToken: string) {
     const result = await this.redis.ft.search(
-      this.INDEX_NAME,
+      RedisSessionRepository.INDEX_NAME,
       `@refreshToken:${refreshToken}`,
     );
 
@@ -63,7 +63,7 @@ export class RedisSessionRepository implements SessionRepository {
 
   async existsByAccessToken(accessToken: string) {
     const result = await this.redis.ft.search(
-      this.INDEX_NAME,
+      RedisSessionRepository.INDEX_NAME,
       `@accessToken:${accessToken}`,
     );
 
@@ -72,7 +72,7 @@ export class RedisSessionRepository implements SessionRepository {
 
   async deleteByAccessToken(accessToken: string) {
     const result = await this.redis.ft.search(
-      this.INDEX_NAME,
+      RedisSessionRepository.INDEX_NAME,
       `@accessToken:${accessToken}`,
     );
 
@@ -86,7 +86,7 @@ export class RedisSessionRepository implements SessionRepository {
 
   async deleteAllByUserId(userId: string) {
     const result = await this.redis.ft.search(
-      this.INDEX_NAME,
+      RedisSessionRepository.INDEX_NAME,
       `@userId:${userId}`,
     );
 
@@ -106,19 +106,19 @@ export class RedisSessionRepository implements SessionRepository {
     }
 
     await this.redis.ft.create(
-      this.INDEX_NAME,
+      RedisSessionRepository.INDEX_NAME,
       {
         '$.accessToken': { type: SchemaFieldTypes.TEXT, AS: 'accessToken' },
         '$.refreshToken': { type: SchemaFieldTypes.TEXT, AS: 'refreshToken' },
         '$.userId': { type: SchemaFieldTypes.TEXT, AS: 'userId' },
       },
-      { ON: 'JSON', PREFIX: this.KEY_PREFIX },
+      { ON: 'JSON', PREFIX: RedisSessionRepository.KEY_PREFIX },
     );
   }
 
   private async existsIndex() {
     try {
-      await this.redis.ft.info(this.INDEX_NAME);
+      await this.redis.ft.info(RedisSessionRepository.INDEX_NAME);
     } catch (error) {
       if (error instanceof ErrorReply) {
         return false;
@@ -128,11 +128,13 @@ export class RedisSessionRepository implements SessionRepository {
     return true;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private makeKey(id: string) {
-    return `${this.KEY_PREFIX}${id}`;
+    return `${RedisSessionRepository.KEY_PREFIX}${id}`;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private extractIdFromKey(key: string) {
-    return key.slice(this.KEY_PREFIX.length);
+    return key.slice(RedisSessionRepository.KEY_PREFIX.length);
   }
 }
