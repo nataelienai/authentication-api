@@ -1,7 +1,7 @@
 import { SignUpRequest } from '@/application/use-cases/sign-up';
 import { HttpRequest } from '@/presentation/ports/http-request';
 import { z } from 'zod';
-import { ZodHttpRequestParser } from './ZodHttpRequestParser';
+import { ZodHttpRequestParser } from './zod-http-request-parser';
 
 export class SignUpHttpRequestParser extends ZodHttpRequestParser<SignUpRequest> {
   // eslint-disable-next-line class-methods-use-this
