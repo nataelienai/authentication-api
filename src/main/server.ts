@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import { loadSignUpController } from './loaders/sign-up-controller';
-import { loadSignInController } from './loaders/sign-in-controller';
-import { loadSignOutController } from './loaders/sign-out-controller';
-import { loadRefreshAccessTokenController } from './loaders/refresh-access-token-controller';
-import { loadGetUserController } from './loaders/get-user-controller';
-import { loadChangeEmailController } from './loaders/change-email-controller';
-import { loadChangePasswordController } from './loaders/change-password-controller';
-import { loadDeleteUserController } from './loaders/delete-user-controller';
+import { loadSignUpController } from './loaders/sign-up-controller-loader';
+import { loadSignInController } from './loaders/sign-in-controller-loader';
+import { loadSignOutController } from './loaders/sign-out-controller-loader';
+import { loadRefreshAccessTokenController } from './loaders/refresh-access-token-controller-loader';
+import { loadGetUserController } from './loaders/get-user-controller-loader';
+import { loadChangeEmailController } from './loaders/change-email-controller-loader';
+import { loadChangePasswordController } from './loaders/change-password-controller-loader';
+import { loadDeleteUserController } from './loaders/delete-user-controller-loader';
 import { getHttpServer } from './servers/http-server';
 
 async function run() {
