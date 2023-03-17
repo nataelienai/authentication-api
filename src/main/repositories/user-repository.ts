@@ -4,9 +4,9 @@ import { getPrismaClient } from '../connections/prisma';
 
 let userRepository: UserRepository;
 
-export function getUserRepository() {
+export async function getUserRepository() {
   if (!userRepository) {
-    userRepository = new PrismaUserRepository(getPrismaClient());
+    userRepository = new PrismaUserRepository(await getPrismaClient());
   }
   return userRepository;
 }

@@ -8,10 +8,15 @@ import { getHttpServer } from '../servers/http-server';
 import { getTokenService } from '../services/token-service';
 
 export async function loadChangeEmailController() {
+  const [userRepository, sessionRepository] = await Promise.all([
+    getUserRepository(),
+    getSessionRepository(),
+  ]);
+
   const changeEmail = new ChangeEmail(
     getTokenService(),
-    getUserRepository(),
-    await getSessionRepository(),
+    userRepository,
+    sessionRepository,
   );
 
   const changeEmailHttpRequestParser = new ChangeEmailHttpRequestParser();

@@ -9,11 +9,16 @@ import { getPasswordHasher } from '../services/password-hasher';
 import { getTokenService } from '../services/token-service';
 
 export async function loadSignUpController() {
+  const [userRepository, sessionRepository] = await Promise.all([
+    getUserRepository(),
+    getSessionRepository(),
+  ]);
+
   const signUp = new SignUp(
     getPasswordHasher(),
-    getUserRepository(),
+    userRepository,
     getTokenService(),
-    await getSessionRepository(),
+    sessionRepository,
   );
 
   const signUpHttpRequestParser = new SignUpHttpRequestParser();

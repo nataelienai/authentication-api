@@ -8,10 +8,15 @@ import { getHttpServer } from '../servers/http-server';
 import { getTokenService } from '../services/token-service';
 
 export async function loadGetUserController() {
+  const [userRepository, sessionRepository] = await Promise.all([
+    getUserRepository(),
+    getSessionRepository(),
+  ]);
+
   const getUser = new GetUser(
     getTokenService(),
-    getUserRepository(),
-    await getSessionRepository(),
+    userRepository,
+    sessionRepository,
   );
 
   const getUserHttpRequestParser = new GetUserHttpRequestParser();

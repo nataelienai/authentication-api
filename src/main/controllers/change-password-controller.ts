@@ -9,11 +9,16 @@ import { getPasswordHasher } from '../services/password-hasher';
 import { getTokenService } from '../services/token-service';
 
 export async function loadChangePasswordController() {
+  const [userRepository, sessionRepository] = await Promise.all([
+    getUserRepository(),
+    getSessionRepository(),
+  ]);
+
   const changePassword = new ChangePassword(
     getTokenService(),
-    getUserRepository(),
+    userRepository,
     getPasswordHasher(),
-    await getSessionRepository(),
+    sessionRepository,
   );
 
   const changePasswordHttpRequestParser = new ChangePasswordHttpRequestParser();

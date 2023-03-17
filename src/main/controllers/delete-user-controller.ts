@@ -8,10 +8,15 @@ import { getHttpServer } from '../servers/http-server';
 import { getTokenService } from '../services/token-service';
 
 export async function loadDeleteUserController() {
+  const [userRepository, sessionRepository] = await Promise.all([
+    getUserRepository(),
+    getSessionRepository(),
+  ]);
+
   const deleteUser = new DeleteUser(
     getTokenService(),
-    getUserRepository(),
-    await getSessionRepository(),
+    userRepository,
+    sessionRepository,
   );
 
   const deleteUserHttpRequestParser = new DeleteUserHttpRequestParser();
