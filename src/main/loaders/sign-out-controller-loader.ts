@@ -2,9 +2,9 @@
 import { SignOut } from '@/application/use-cases/sign-out';
 import { SignOutHttpRequestParser } from '@/infra/http/parsers/sign-out-http-request-parser';
 import { SignOutController } from '@/presentation/controllers/sign-out-controller';
-import { getSessionRepository } from '../repositories/session-repository';
-import { getHttpServer } from '../servers/http-server';
-import { getTokenService } from '../services/token-service';
+import { getSessionRepository } from '../singletons/session-repository';
+import { getHttpServer } from '../singletons/http-server';
+import { getTokenService } from '../singletons/token-service';
 
 export async function loadSignOutController() {
   const signOut = new SignOut(getTokenService(), await getSessionRepository());

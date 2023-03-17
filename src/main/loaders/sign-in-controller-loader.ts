@@ -2,11 +2,11 @@
 import { SignIn } from '@/application/use-cases/sign-in';
 import { SignInHttpRequestParser } from '@/infra/http/parsers/sign-in-http-request-parser';
 import { SignInController } from '@/presentation/controllers/sign-in-controller';
-import { getSessionRepository } from '../repositories/session-repository';
-import { getUserRepository } from '../repositories/user-repository';
-import { getHttpServer } from '../servers/http-server';
-import { getPasswordHasher } from '../services/password-hasher';
-import { getTokenService } from '../services/token-service';
+import { getSessionRepository } from '../singletons/session-repository';
+import { getUserRepository } from '../singletons/user-repository';
+import { getHttpServer } from '../singletons/http-server';
+import { getPasswordHasher } from '../singletons/password-hasher';
+import { getTokenService } from '../singletons/token-service';
 
 export async function loadSignInController() {
   const [userRepository, sessionRepository] = await Promise.all([

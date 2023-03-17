@@ -7,7 +7,7 @@ import { loadGetUserController } from './loaders/get-user-controller-loader';
 import { loadChangeEmailController } from './loaders/change-email-controller-loader';
 import { loadChangePasswordController } from './loaders/change-password-controller-loader';
 import { loadDeleteUserController } from './loaders/delete-user-controller-loader';
-import { getHttpServer } from './servers/http-server';
+import { getHttpServer } from './singletons/http-server';
 
 async function run() {
   await Promise.all([

@@ -1,6 +1,6 @@
 import { UserRepository } from '@/application/ports/user-repository';
 import { PrismaUserRepository } from '@/infra/database/prisma-user-repository';
-import { getPrismaClient } from '../connections/prisma';
+import { getPrismaClient } from './prisma';
 
 let userRepository: UserRepository;
 
