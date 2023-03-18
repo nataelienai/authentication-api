@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import { getSignUpController } from './loaders/sign-up-controller-loader';
-import { getSignInController } from './loaders/sign-in-controller-loader';
-import { getSignOutController } from './loaders/sign-out-controller-loader';
-import { getRefreshAccessTokenController } from './loaders/refresh-access-token-controller-loader';
-import { getGetUserController } from './loaders/get-user-controller-loader';
-import { getChangeEmailController } from './loaders/change-email-controller-loader';
-import { getChangePasswordController } from './loaders/change-password-controller-loader';
-import { getDeleteUserController } from './loaders/delete-user-controller-loader';
+import { getSignUpController } from './singletons/sign-up-controller';
+import { getSignInController } from './singletons/sign-in-controller';
+import { getSignOutController } from './singletons/sign-out-controller';
+import { getRefreshAccessTokenController } from './singletons/refresh-access-token-controller';
+import { getGetUserController } from './singletons/get-user-controller';
+import { getChangeEmailController } from './singletons/change-email-controller';
+import { getChangePasswordController } from './singletons/change-password-controller';
+import { getDeleteUserController } from './singletons/delete-user-controller';
 import { getHttpServer } from './singletons/http-server';
 
 async function run() {

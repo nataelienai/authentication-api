@@ -1,8 +1,8 @@
 import { RefreshAccessToken } from '@/application/use-cases/refresh-access-token';
 import { RefreshAccessTokenHttpRequestParser } from '@/infra/http/parsers/refresh-access-token-http-request-parser';
 import { RefreshAccessTokenController } from '@/presentation/controllers/refresh-access-token-controller';
-import { getSessionRepository } from '../singletons/session-repository';
-import { getTokenService } from '../singletons/token-service';
+import { getSessionRepository } from './session-repository';
+import { getTokenService } from './token-service';
 
 export async function getRefreshAccessTokenController() {
   const refreshAccessToken = new RefreshAccessToken(

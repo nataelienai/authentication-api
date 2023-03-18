@@ -1,9 +1,9 @@
 import { DeleteUser } from '@/application/use-cases/delete-user';
 import { DeleteUserHttpRequestParser } from '@/infra/http/parsers/delete-user-http-request-parser';
 import { DeleteUserController } from '@/presentation/controllers/delete-user-controller';
-import { getSessionRepository } from '../singletons/session-repository';
-import { getUserRepository } from '../singletons/user-repository';
-import { getTokenService } from '../singletons/token-service';
+import { getSessionRepository } from './session-repository';
+import { getUserRepository } from './user-repository';
+import { getTokenService } from './token-service';
 
 export async function getDeleteUserController() {
   const [userRepository, sessionRepository] = await Promise.all([

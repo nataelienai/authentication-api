@@ -1,10 +1,10 @@
 import { ChangePassword } from '@/application/use-cases/change-password';
 import { ChangePasswordHttpRequestParser } from '@/infra/http/parsers/change-password-http-request-parser';
 import { ChangePasswordController } from '@/presentation/controllers/change-password-controller';
-import { getSessionRepository } from '../singletons/session-repository';
-import { getUserRepository } from '../singletons/user-repository';
-import { getPasswordHasher } from '../singletons/password-hasher';
-import { getTokenService } from '../singletons/token-service';
+import { getSessionRepository } from './session-repository';
+import { getUserRepository } from './user-repository';
+import { getPasswordHasher } from './password-hasher';
+import { getTokenService } from './token-service';
 
 export async function getChangePasswordController() {
   const [userRepository, sessionRepository] = await Promise.all([

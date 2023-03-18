@@ -1,10 +1,10 @@
 import { SignIn } from '@/application/use-cases/sign-in';
 import { SignInHttpRequestParser } from '@/infra/http/parsers/sign-in-http-request-parser';
 import { SignInController } from '@/presentation/controllers/sign-in-controller';
-import { getSessionRepository } from '../singletons/session-repository';
-import { getUserRepository } from '../singletons/user-repository';
-import { getPasswordHasher } from '../singletons/password-hasher';
-import { getTokenService } from '../singletons/token-service';
+import { getSessionRepository } from './session-repository';
+import { getUserRepository } from './user-repository';
+import { getPasswordHasher } from './password-hasher';
+import { getTokenService } from './token-service';
 
 export async function getSignInController() {
   const [userRepository, sessionRepository] = await Promise.all([
