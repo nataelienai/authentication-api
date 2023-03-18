@@ -13,7 +13,9 @@ export class ExpressHttpServer implements HttpServer {
     this.app.use(cors());
   }
 
-  on(method: Method, path: string, controller: HttpController) {
+  on(notUsedMethod: Method, notUsedPath: string, controller: HttpController) {
+    const { method, path } = controller.route;
+
     this.app[method](path, (request, response) => {
       const httpRequest: HttpRequest = {
         headers: request.headers,
