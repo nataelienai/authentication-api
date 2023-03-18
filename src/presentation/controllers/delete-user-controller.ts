@@ -5,11 +5,17 @@ import {
 } from '@/application/use-cases/delete-user';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
+import { HttpRoute } from '../ports/http-route';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, noContent, notFound } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class DeleteUserController extends Controller<DeleteUserRequest, void> {
+  private readonly httpRoute: HttpRoute = {
+    method: 'delete',
+    path: '/user',
+  };
+
   constructor(
     private readonly deleteUser: DeleteUser,
     httpRequestParser: HttpRequestParser<DeleteUserRequest>,
@@ -17,6 +23,10 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
   ) {
     super(httpRequestParser);
     httpServer.on('delete', '/user', this);
+  }
+
+  get route() {
+    return this.httpRoute;
   }
 
   protected async execute(

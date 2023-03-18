@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/sign-in';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
+import { HttpRoute } from '../ports/http-route';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
@@ -14,6 +15,11 @@ export class SignInController extends Controller<
   SignInRequest,
   SignInResponse
 > {
+  private readonly httpRoute: HttpRoute = {
+    method: 'post',
+    path: '/sign-in',
+  };
+
   constructor(
     private readonly signIn: SignIn,
     httpRequestParser: HttpRequestParser<SignInRequest>,
@@ -21,6 +27,10 @@ export class SignInController extends Controller<
   ) {
     super(httpRequestParser);
     httpServer.on('post', '/sign-in', this);
+  }
+
+  get route() {
+    return this.httpRoute;
   }
 
   protected async execute(

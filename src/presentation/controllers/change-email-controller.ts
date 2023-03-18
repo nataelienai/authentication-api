@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/change-email';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
+import { HttpRoute } from '../ports/http-route';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
@@ -14,6 +15,11 @@ export class ChangeEmailController extends Controller<
   ChangeEmailRequest,
   ChangeEmailResponse
 > {
+  private readonly httpRoute: HttpRoute = {
+    method: 'patch',
+    path: '/user/email',
+  };
+
   constructor(
     private readonly changeEmail: ChangeEmail,
     httpRequestParser: HttpRequestParser<ChangeEmailRequest>,
@@ -21,6 +27,10 @@ export class ChangeEmailController extends Controller<
   ) {
     super(httpRequestParser);
     httpServer.on('patch', '/user/email', this);
+  }
+
+  get route() {
+    return this.httpRoute;
   }
 
   protected async execute(

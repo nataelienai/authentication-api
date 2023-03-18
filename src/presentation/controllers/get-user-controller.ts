@@ -6,6 +6,7 @@ import {
 } from '@/application/use-cases/get-user';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
+import { HttpRoute } from '../ports/http-route';
 import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
@@ -14,6 +15,11 @@ export class GetUserController extends Controller<
   GetUserRequest,
   GetUserResponse
 > {
+  private readonly httpRoute: HttpRoute = {
+    method: 'get',
+    path: '/user',
+  };
+
   constructor(
     private readonly getUser: GetUser,
     httpRequestParser: HttpRequestParser<GetUserRequest>,
@@ -21,6 +27,10 @@ export class GetUserController extends Controller<
   ) {
     super(httpRequestParser);
     httpServer.on('get', '/user', this);
+  }
+
+  get route() {
+    return this.httpRoute;
   }
 
   protected async execute(
