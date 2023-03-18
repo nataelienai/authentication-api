@@ -27,7 +27,6 @@ export async function loadChangePasswordController() {
   const controller = new ChangePasswordController(
     changePassword,
     changePasswordHttpRequestParser,
-    httpServer,
   );
 
   httpServer.register(controller);

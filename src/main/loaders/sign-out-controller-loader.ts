@@ -12,11 +12,7 @@ export async function loadSignOutController() {
   const signOutHttpRequestParser = new SignOutHttpRequestParser();
 
   const httpServer = getHttpServer();
-  const controller = new SignOutController(
-    signOut,
-    signOutHttpRequestParser,
-    httpServer,
-  );
+  const controller = new SignOutController(signOut, signOutHttpRequestParser);
 
   httpServer.register(controller);
 }

@@ -25,7 +25,6 @@ export async function loadChangeEmailController() {
   const controller = new ChangeEmailController(
     changeEmail,
     changeEmailHttpRequestParser,
-    httpServer,
   );
 
   httpServer.register(controller);

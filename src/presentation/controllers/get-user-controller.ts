@@ -7,7 +7,6 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { HttpServer } from '../ports/http-server';
 import { badRequest, notFound, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
@@ -23,10 +22,8 @@ export class GetUserController extends Controller<
   constructor(
     private readonly getUser: GetUser,
     httpRequestParser: HttpRequestParser<GetUserRequest>,
-    httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.register(this);
   }
 
   get route() {

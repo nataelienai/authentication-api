@@ -6,7 +6,6 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { HttpServer } from '../ports/http-server';
 import { badRequest, noContent, notFound } from '../utils/http-responses';
 import { Controller } from './controller';
 
@@ -19,10 +18,8 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
   constructor(
     private readonly deleteUser: DeleteUser,
     httpRequestParser: HttpRequestParser<DeleteUserRequest>,
-    httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.register(this);
   }
 
   get route() {

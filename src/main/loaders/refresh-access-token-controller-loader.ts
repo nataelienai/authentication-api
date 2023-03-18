@@ -19,7 +19,6 @@ export async function loadRefreshAccessTokenController() {
   const controller = new RefreshAccessTokenController(
     refreshAccessToken,
     refreshAccessTokenHttpRequestParser,
-    httpServer,
   );
 
   httpServer.register(controller);

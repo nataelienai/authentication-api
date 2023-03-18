@@ -2,7 +2,6 @@ import { SignOut, SignOutRequest } from '@/application/use-cases/sign-out';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { HttpServer } from '../ports/http-server';
 import { badRequest, noContent } from '../utils/http-responses';
 import { Controller } from './controller';
 
@@ -15,10 +14,8 @@ export class SignOutController extends Controller<SignOutRequest, void> {
   constructor(
     private readonly signOut: SignOut,
     httpRequestParser: HttpRequestParser<SignOutRequest>,
-    httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.register(this);
   }
 
   get route() {
