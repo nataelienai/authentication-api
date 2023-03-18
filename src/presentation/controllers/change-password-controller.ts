@@ -26,7 +26,7 @@ export class ChangePasswordController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('patch', '/user/password', this);
+    httpServer.register(this);
   }
 
   get route() {

@@ -25,7 +25,7 @@ export class RefreshAccessTokenController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('post', '/token', this);
+    httpServer.register(this);
   }
 
   get route() {

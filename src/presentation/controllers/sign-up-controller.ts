@@ -26,7 +26,7 @@ export class SignUpController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('post', '/sign-up', this);
+    httpServer.register(this);
   }
 
   get route() {

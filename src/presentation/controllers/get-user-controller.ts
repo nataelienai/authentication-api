@@ -26,7 +26,7 @@ export class GetUserController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('get', '/user', this);
+    httpServer.register(this);
   }
 
   get route() {

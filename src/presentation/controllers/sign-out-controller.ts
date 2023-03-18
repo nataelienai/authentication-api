@@ -18,7 +18,7 @@ export class SignOutController extends Controller<SignOutRequest, void> {
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('post', '/sign-out', this);
+    httpServer.register(this);
   }
 
   get route() {

@@ -26,7 +26,7 @@ export class ChangeEmailController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('patch', '/user/email', this);
+    httpServer.register(this);
   }
 
   get route() {

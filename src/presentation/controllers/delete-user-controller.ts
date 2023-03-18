@@ -22,7 +22,7 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('delete', '/user', this);
+    httpServer.register(this);
   }
 
   get route() {

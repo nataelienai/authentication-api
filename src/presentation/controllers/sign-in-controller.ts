@@ -26,7 +26,7 @@ export class SignInController extends Controller<
     httpServer: HttpServer,
   ) {
     super(httpRequestParser);
-    httpServer.on('post', '/sign-in', this);
+    httpServer.register(this);
   }
 
   get route() {

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { HttpController } from '@/presentation/ports/http-controller';
-import { HttpServer, Method } from '@/presentation/ports/http-server';
+import { HttpServer } from '@/presentation/ports/http-server';
 import { HttpRequest } from '@/presentation/ports/http-request';
 
 export class ExpressHttpServer implements HttpServer {
@@ -13,7 +13,7 @@ export class ExpressHttpServer implements HttpServer {
     this.app.use(cors());
   }
 
-  on(notUsedMethod: Method, notUsedPath: string, controller: HttpController) {
+  register(controller: HttpController) {
     const { method, path } = controller.route;
 
     this.app[method](path, (request, response) => {
