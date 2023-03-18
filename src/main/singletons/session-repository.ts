@@ -1,6 +1,6 @@
 import { SessionRepository } from '@/application/ports/session-repository';
 import { RedisSessionRepository } from '@/infra/database/redis-session-repository';
-import { getRedisClient } from '../connections/redis';
+import { getRedisClient } from './redis';
 
 let sessionRepository: SessionRepository;
 
