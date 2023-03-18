@@ -21,9 +21,12 @@ export async function loadDeleteUserController() {
 
   const deleteUserHttpRequestParser = new DeleteUserHttpRequestParser();
 
-  new DeleteUserController(
+  const httpServer = getHttpServer();
+  const controller = new DeleteUserController(
     deleteUser,
     deleteUserHttpRequestParser,
-    getHttpServer(),
+    httpServer,
   );
+
+  httpServer.register(controller);
 }

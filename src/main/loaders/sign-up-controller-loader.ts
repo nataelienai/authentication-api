@@ -23,5 +23,12 @@ export async function loadSignUpController() {
 
   const signUpHttpRequestParser = new SignUpHttpRequestParser();
 
-  new SignUpController(signUp, signUpHttpRequestParser, getHttpServer());
+  const httpServer = getHttpServer();
+  const controller = new SignUpController(
+    signUp,
+    signUpHttpRequestParser,
+    httpServer,
+  );
+
+  httpServer.register(controller);
 }

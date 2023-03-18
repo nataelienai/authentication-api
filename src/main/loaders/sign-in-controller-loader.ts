@@ -23,5 +23,12 @@ export async function loadSignInController() {
 
   const signInHttpRequestParser = new SignInHttpRequestParser();
 
-  new SignInController(signIn, signInHttpRequestParser, getHttpServer());
+  const httpServer = getHttpServer();
+  const controller = new SignInController(
+    signIn,
+    signInHttpRequestParser,
+    httpServer,
+  );
+
+  httpServer.register(controller);
 }

@@ -15,9 +15,12 @@ export async function loadRefreshAccessTokenController() {
   const refreshAccessTokenHttpRequestParser =
     new RefreshAccessTokenHttpRequestParser();
 
-  new RefreshAccessTokenController(
+  const httpServer = getHttpServer();
+  const controller = new RefreshAccessTokenController(
     refreshAccessToken,
     refreshAccessTokenHttpRequestParser,
-    getHttpServer(),
+    httpServer,
   );
+
+  httpServer.register(controller);
 }

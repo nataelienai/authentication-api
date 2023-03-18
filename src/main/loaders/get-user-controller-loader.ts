@@ -21,5 +21,12 @@ export async function loadGetUserController() {
 
   const getUserHttpRequestParser = new GetUserHttpRequestParser();
 
-  new GetUserController(getUser, getUserHttpRequestParser, getHttpServer());
+  const httpServer = getHttpServer();
+  const controller = new GetUserController(
+    getUser,
+    getUserHttpRequestParser,
+    httpServer,
+  );
+
+  httpServer.register(controller);
 }
