@@ -10,7 +10,7 @@ import { loadDeleteUserController } from './loaders/delete-user-controller-loade
 import { getHttpServer } from './singletons/http-server';
 
 async function run() {
-  await Promise.all([
+  const controllers = await Promise.all([
     loadSignInController(),
     loadSignUpController(),
     loadSignOutController(),
@@ -22,6 +22,9 @@ async function run() {
   ]);
 
   const httpServer = getHttpServer();
+
+  controllers.forEach((controller) => httpServer.register(controller));
+
   httpServer.listen(3000);
 }
 

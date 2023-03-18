@@ -1,10 +1,8 @@
-/* eslint-disable no-new */
 import { SignIn } from '@/application/use-cases/sign-in';
 import { SignInHttpRequestParser } from '@/infra/http/parsers/sign-in-http-request-parser';
 import { SignInController } from '@/presentation/controllers/sign-in-controller';
 import { getSessionRepository } from '../singletons/session-repository';
 import { getUserRepository } from '../singletons/user-repository';
-import { getHttpServer } from '../singletons/http-server';
 import { getPasswordHasher } from '../singletons/password-hasher';
 import { getTokenService } from '../singletons/token-service';
 
@@ -23,8 +21,5 @@ export async function loadSignInController() {
 
   const signInHttpRequestParser = new SignInHttpRequestParser();
 
-  const httpServer = getHttpServer();
-  const controller = new SignInController(signIn, signInHttpRequestParser);
-
-  httpServer.register(controller);
+  return new SignInController(signIn, signInHttpRequestParser);
 }

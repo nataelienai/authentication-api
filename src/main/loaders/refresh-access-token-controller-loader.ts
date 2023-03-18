@@ -1,9 +1,7 @@
-/* eslint-disable no-new */
 import { RefreshAccessToken } from '@/application/use-cases/refresh-access-token';
 import { RefreshAccessTokenHttpRequestParser } from '@/infra/http/parsers/refresh-access-token-http-request-parser';
 import { RefreshAccessTokenController } from '@/presentation/controllers/refresh-access-token-controller';
 import { getSessionRepository } from '../singletons/session-repository';
-import { getHttpServer } from '../singletons/http-server';
 import { getTokenService } from '../singletons/token-service';
 
 export async function loadRefreshAccessTokenController() {
@@ -15,11 +13,8 @@ export async function loadRefreshAccessTokenController() {
   const refreshAccessTokenHttpRequestParser =
     new RefreshAccessTokenHttpRequestParser();
 
-  const httpServer = getHttpServer();
-  const controller = new RefreshAccessTokenController(
+  return new RefreshAccessTokenController(
     refreshAccessToken,
     refreshAccessTokenHttpRequestParser,
   );
-
-  httpServer.register(controller);
 }
