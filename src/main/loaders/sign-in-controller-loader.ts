@@ -6,7 +6,7 @@ import { getUserRepository } from '../singletons/user-repository';
 import { getPasswordHasher } from '../singletons/password-hasher';
 import { getTokenService } from '../singletons/token-service';
 
-export async function loadSignInController() {
+export async function getSignInController() {
   const [userRepository, sessionRepository] = await Promise.all([
     getUserRepository(),
     getSessionRepository(),

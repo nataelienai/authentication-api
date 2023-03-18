@@ -1,24 +1,24 @@
 /* eslint-disable no-console */
-import { loadSignUpController } from './loaders/sign-up-controller-loader';
-import { loadSignInController } from './loaders/sign-in-controller-loader';
-import { loadSignOutController } from './loaders/sign-out-controller-loader';
-import { loadRefreshAccessTokenController } from './loaders/refresh-access-token-controller-loader';
-import { loadGetUserController } from './loaders/get-user-controller-loader';
-import { loadChangeEmailController } from './loaders/change-email-controller-loader';
-import { loadChangePasswordController } from './loaders/change-password-controller-loader';
-import { loadDeleteUserController } from './loaders/delete-user-controller-loader';
+import { getSignUpController } from './loaders/sign-up-controller-loader';
+import { getSignInController } from './loaders/sign-in-controller-loader';
+import { getSignOutController } from './loaders/sign-out-controller-loader';
+import { getRefreshAccessTokenController } from './loaders/refresh-access-token-controller-loader';
+import { getGetUserController } from './loaders/get-user-controller-loader';
+import { getChangeEmailController } from './loaders/change-email-controller-loader';
+import { getChangePasswordController } from './loaders/change-password-controller-loader';
+import { getDeleteUserController } from './loaders/delete-user-controller-loader';
 import { getHttpServer } from './singletons/http-server';
 
 async function run() {
   const controllers = await Promise.all([
-    loadSignInController(),
-    loadSignUpController(),
-    loadSignOutController(),
-    loadRefreshAccessTokenController(),
-    loadGetUserController(),
-    loadChangeEmailController(),
-    loadChangePasswordController(),
-    loadDeleteUserController(),
+    getSignInController(),
+    getSignUpController(),
+    getSignOutController(),
+    getRefreshAccessTokenController(),
+    getGetUserController(),
+    getChangeEmailController(),
+    getChangePasswordController(),
+    getDeleteUserController(),
   ]);
 
   const httpServer = getHttpServer();

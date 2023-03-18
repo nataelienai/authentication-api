@@ -4,7 +4,7 @@ import { RefreshAccessTokenController } from '@/presentation/controllers/refresh
 import { getSessionRepository } from '../singletons/session-repository';
 import { getTokenService } from '../singletons/token-service';
 
-export async function loadRefreshAccessTokenController() {
+export async function getRefreshAccessTokenController() {
   const refreshAccessToken = new RefreshAccessToken(
     await getSessionRepository(),
     getTokenService(),

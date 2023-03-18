@@ -4,7 +4,7 @@ import { SignOutController } from '@/presentation/controllers/sign-out-controlle
 import { getSessionRepository } from '../singletons/session-repository';
 import { getTokenService } from '../singletons/token-service';
 
-export async function loadSignOutController() {
+export async function getSignOutController() {
   const signOut = new SignOut(getTokenService(), await getSessionRepository());
 
   const signOutHttpRequestParser = new SignOutHttpRequestParser();

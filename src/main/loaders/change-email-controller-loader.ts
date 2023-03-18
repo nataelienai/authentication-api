@@ -5,7 +5,7 @@ import { getSessionRepository } from '../singletons/session-repository';
 import { getUserRepository } from '../singletons/user-repository';
 import { getTokenService } from '../singletons/token-service';
 
-export async function loadChangeEmailController() {
+export async function getChangeEmailController() {
   const [userRepository, sessionRepository] = await Promise.all([
     getUserRepository(),
     getSessionRepository(),
