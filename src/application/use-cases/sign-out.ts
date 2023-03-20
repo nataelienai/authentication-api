@@ -16,19 +16,12 @@ export class SignOut {
   async execute(
     request: SignOutRequest,
   ): Promise<Either<InvalidTokenError, void>> {
-    const isTokenValid = await this.tokenService.isAccessTokenValid(
-      request.accessToken,
-    );
+    const [isTokenValid, sessionExists] = await Promise.all([
+      this.tokenService.isAccessTokenValid(request.accessToken),
+      this.sessionRepository.existsByAccessToken(request.accessToken),
+    ]);
 
-    if (!isTokenValid) {
-      return left(new InvalidTokenError());
-    }
-
-    const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.accessToken,
-    );
-
-    if (!sessionExists) {
+    if (!isTokenValid || !sessionExists) {
       return left(new InvalidTokenError());
     }
 
