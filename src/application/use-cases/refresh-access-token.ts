@@ -21,20 +21,17 @@ export class RefreshAccessToken {
   async execute(
     request: RefreshAccessTokenRequest,
   ): Promise<Either<InvalidTokenError, RefreshAccessTokenResponse>> {
-    const session = await this.sessionRepository.findByRefreshToken(
-      request.refreshToken,
-    );
-
-    if (!session) {
-      return left(new InvalidTokenError());
-    }
-
-    const errorOrDecodedPayload = await this.tokenService.decodeRefreshToken(
-      request.refreshToken,
-    );
+    const [errorOrDecodedPayload, session] = await Promise.all([
+      this.tokenService.decodeRefreshToken(request.refreshToken),
+      this.sessionRepository.findByRefreshToken(request.refreshToken),
+    ]);
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
+    }
+
+    if (!session) {
+      return left(new InvalidTokenError());
     }
 
     const { userId } = errorOrDecodedPayload.value;
