@@ -1,23 +1,17 @@
 import { SignUp } from '@/application/use-cases/sign-up';
 import { SignUpHttpRequestParser } from '@/infra/http/parsers/sign-up-http-request-parser';
 import { SignUpController } from '@/presentation/controllers/sign-up-controller';
-import { getSessionRepository } from './session-repository';
 import { getUserRepository } from './user-repository';
 import { getPasswordHasher } from './password-hasher';
-import { getTokenService } from './token-service';
+import { getAuth } from './auth';
 
 export async function getSignUpController() {
-  const [userRepository, sessionRepository] = await Promise.all([
+  const [userRepository, auth] = await Promise.all([
     getUserRepository(),
-    getSessionRepository(),
+    getAuth(),
   ]);
 
-  const signUp = new SignUp(
-    getPasswordHasher(),
-    userRepository,
-    getTokenService(),
-    sessionRepository,
-  );
+  const signUp = new SignUp(getPasswordHasher(), userRepository, auth);
 
   const signUpHttpRequestParser = new SignUpHttpRequestParser();
 

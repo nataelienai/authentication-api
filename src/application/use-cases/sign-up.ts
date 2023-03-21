@@ -8,9 +8,8 @@ import { User } from '@/domain/user';
 import { Either, left, right } from '@/shared/either';
 import { EmailAlreadyExistsError } from '../errors/email-already-exists-error';
 import { PasswordHasher } from '../ports/password-hasher';
-import { SessionRepository } from '../ports/session-repository';
-import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
+import { Auth } from './auth';
 
 export type SignUpRequest = {
   email: string;
@@ -26,8 +25,7 @@ export class SignUp {
   constructor(
     private readonly passwordHasher: PasswordHasher,
     private readonly userRepository: UserRepository,
-    private readonly tokenService: TokenService,
-    private readonly sessionRepository: SessionRepository,
+    private readonly auth: Auth,
   ) {}
 
   async execute(
@@ -72,18 +70,7 @@ export class SignUp {
 
     await this.userRepository.create(user);
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.tokenService.generateAccessToken(user.id),
-      this.tokenService.generateRefreshToken(user.id),
-    ]);
-
-    const session = Session.create({
-      accessToken,
-      refreshToken,
-      userId: user.id,
-    });
-
-    await this.sessionRepository.create(session);
+    const session = await this.auth.grantAccessToUser(user.id);
 
     return right({ user, session });
   }
