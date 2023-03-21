@@ -1,21 +1,16 @@
 import { GetUser } from '@/application/use-cases/get-user';
 import { GetUserHttpRequestParser } from '@/infra/http/parsers/get-user-http-request-parser';
 import { GetUserController } from '@/presentation/controllers/get-user-controller';
-import { getSessionRepository } from './session-repository';
 import { getUserRepository } from './user-repository';
-import { getTokenService } from './token-service';
+import { getAuth } from './auth';
 
 export async function getGetUserController() {
-  const [userRepository, sessionRepository] = await Promise.all([
+  const [userRepository, auth] = await Promise.all([
     getUserRepository(),
-    getSessionRepository(),
+    getAuth(),
   ]);
 
-  const getUser = new GetUser(
-    getTokenService(),
-    userRepository,
-    sessionRepository,
-  );
+  const getUser = new GetUser(userRepository, auth);
 
   const getUserHttpRequestParser = new GetUserHttpRequestParser();
 
