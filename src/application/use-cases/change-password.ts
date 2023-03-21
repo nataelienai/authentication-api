@@ -4,10 +4,9 @@ import { User } from '@/domain/user';
 import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 import { UserNotFoundError } from '../errors/user-not-found-error';
-import { SessionRepository } from '../ports/session-repository';
 import { PasswordHasher } from '../ports/password-hasher';
-import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
+import { Auth } from './auth';
 
 export type ChangePasswordRequest = {
   accessToken: string;
@@ -20,10 +19,9 @@ export type ChangePasswordResponse = {
 
 export class ChangePassword {
   constructor(
-    private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
     private readonly passwordHasher: PasswordHasher,
-    private readonly sessionRepository: SessionRepository,
+    private readonly auth: Auth,
   ) {}
 
   async execute(
@@ -34,20 +32,12 @@ export class ChangePassword {
       ChangePasswordResponse
     >
   > {
-    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+    const errorOrDecodedPayload = await this.auth.authenticate(
       request.accessToken,
     );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
-    }
-
-    const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.accessToken,
-    );
-
-    if (!sessionExists) {
-      return left(new InvalidTokenError());
     }
 
     const { userId } = errorOrDecodedPayload.value;
