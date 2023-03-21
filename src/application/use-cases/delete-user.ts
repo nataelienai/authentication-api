@@ -1,9 +1,8 @@
 import { Either, left, right } from '@/shared/either';
 import { InvalidTokenError } from '../errors/invalid-token-error';
 import { UserNotFoundError } from '../errors/user-not-found-error';
-import { SessionRepository } from '../ports/session-repository';
-import { TokenService } from '../ports/token-service';
 import { UserRepository } from '../ports/user-repository';
+import { Auth } from './auth';
 
 export type DeleteUserRequest = {
   accessToken: string;
@@ -11,28 +10,19 @@ export type DeleteUserRequest = {
 
 export class DeleteUser {
   constructor(
-    private readonly tokenService: TokenService,
     private readonly userRepository: UserRepository,
-    private readonly sessionRepository: SessionRepository,
+    private readonly auth: Auth,
   ) {}
 
   async execute(
     request: DeleteUserRequest,
   ): Promise<Either<InvalidTokenError | UserNotFoundError, void>> {
-    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+    const errorOrDecodedPayload = await this.auth.authenticate(
       request.accessToken,
     );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
-    }
-
-    const sessionExists = await this.sessionRepository.existsByAccessToken(
-      request.accessToken,
-    );
-
-    if (!sessionExists) {
-      return left(new InvalidTokenError());
     }
 
     const { userId } = errorOrDecodedPayload.value;
@@ -44,7 +34,7 @@ export class DeleteUser {
 
     await Promise.all([
       this.userRepository.deleteById(userId),
-      this.sessionRepository.deleteAllByUserId(userId),
+      this.auth.revokeAccessFromUser(userId),
     ]);
 
     return right(undefined);

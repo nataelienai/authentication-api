@@ -1,21 +1,16 @@
 import { DeleteUser } from '@/application/use-cases/delete-user';
 import { DeleteUserHttpRequestParser } from '@/infra/http/parsers/delete-user-http-request-parser';
 import { DeleteUserController } from '@/presentation/controllers/delete-user-controller';
-import { getSessionRepository } from './session-repository';
 import { getUserRepository } from './user-repository';
-import { getTokenService } from './token-service';
+import { getAuth } from './auth';
 
 export async function getDeleteUserController() {
-  const [userRepository, sessionRepository] = await Promise.all([
+  const [userRepository, auth] = await Promise.all([
     getUserRepository(),
-    getSessionRepository(),
+    getAuth(),
   ]);
 
-  const deleteUser = new DeleteUser(
-    getTokenService(),
-    userRepository,
-    sessionRepository,
-  );
+  const deleteUser = new DeleteUser(userRepository, auth);
 
   const deleteUserHttpRequestParser = new DeleteUserHttpRequestParser();
 
