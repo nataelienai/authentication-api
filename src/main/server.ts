@@ -25,7 +25,9 @@ async function run() {
 
   controllers.forEach((controller) => httpServer.register(controller));
 
-  httpServer.listen(3000);
+  httpServer.listen(3000, () =>
+    console.log('HTTP server listening on port 3000'),
+  );
 }
 
 run().catch((e) => {

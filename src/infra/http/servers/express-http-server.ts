@@ -33,7 +33,7 @@ export class ExpressHttpServer implements HttpServer {
     });
   }
 
-  listen(port: number) {
-    this.app.listen(port);
+  listen(port: number, callback?: () => void) {
+    this.app.listen(port, callback);
   }
 }
