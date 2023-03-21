@@ -1,21 +1,16 @@
 import { ChangeEmail } from '@/application/use-cases/change-email';
 import { ChangeEmailHttpRequestParser } from '@/infra/http/parsers/change-email-http-request-parser';
 import { ChangeEmailController } from '@/presentation/controllers/change-email-controller';
-import { getSessionRepository } from './session-repository';
 import { getUserRepository } from './user-repository';
-import { getTokenService } from './token-service';
+import { getAuth } from './auth';
 
 export async function getChangeEmailController() {
-  const [userRepository, sessionRepository] = await Promise.all([
+  const [userRepository, auth] = await Promise.all([
     getUserRepository(),
-    getSessionRepository(),
+    getAuth(),
   ]);
 
-  const changeEmail = new ChangeEmail(
-    getTokenService(),
-    userRepository,
-    sessionRepository,
-  );
+  const changeEmail = new ChangeEmail(userRepository, auth);
 
   const changeEmailHttpRequestParser = new ChangeEmailHttpRequestParser();
 
