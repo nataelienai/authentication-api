@@ -8,7 +8,7 @@ export class ChangePasswordHttpRequestParser extends ZodHttpRequestParser<Change
   protected parseRequest(request: HttpRequest): ChangePasswordRequest {
     const schema = z.object({
       headers: z.object({
-        accessToken: z
+        authorization: z
           .string()
           .startsWith('Bearer ')
           .transform((token) => token.split('Bearer ')[1]),
@@ -21,7 +21,7 @@ export class ChangePasswordHttpRequestParser extends ZodHttpRequestParser<Change
 
     return {
       password: parsedRequest.body.password,
-      accessToken: parsedRequest.headers.accessToken,
+      accessToken: parsedRequest.headers.authorization,
     };
   }
 }

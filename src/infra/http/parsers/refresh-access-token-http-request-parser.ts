@@ -7,12 +7,9 @@ export class RefreshAccessTokenHttpRequestParser extends ZodHttpRequestParser<Re
   // eslint-disable-next-line class-methods-use-this
   protected parseRequest(request: HttpRequest): RefreshAccessTokenRequest {
     const schema = z.object({
-      refreshToken: z
-        .string()
-        .startsWith('Bearer ')
-        .transform((token) => token.split('Bearer ')[1]),
+      refreshToken: z.string(),
     });
 
-    return schema.parse(request.headers);
+    return schema.parse(request.body);
   }
 }

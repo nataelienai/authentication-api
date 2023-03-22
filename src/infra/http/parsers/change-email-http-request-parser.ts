@@ -8,7 +8,7 @@ export class ChangeEmailHttpRequestParser extends ZodHttpRequestParser<ChangeEma
   protected parseRequest(request: HttpRequest): ChangeEmailRequest {
     const schema = z.object({
       headers: z.object({
-        accessToken: z
+        authorization: z
           .string()
           .startsWith('Bearer ')
           .transform((token) => token.split('Bearer ')[1]),
@@ -21,7 +21,7 @@ export class ChangeEmailHttpRequestParser extends ZodHttpRequestParser<ChangeEma
 
     return {
       email: parsedRequest.body.email,
-      accessToken: parsedRequest.headers.accessToken,
+      accessToken: parsedRequest.headers.authorization,
     };
   }
 }

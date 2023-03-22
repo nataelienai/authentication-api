@@ -7,12 +7,13 @@ export class DeleteUserHttpRequestParser extends ZodHttpRequestParser<DeleteUser
   // eslint-disable-next-line class-methods-use-this
   protected parseRequest(request: HttpRequest): DeleteUserRequest {
     const schema = z.object({
-      accessToken: z
+      authorization: z
         .string()
         .startsWith('Bearer ')
         .transform((token) => token.split('Bearer ')[1]),
     });
+    const parsedSchema = schema.parse(request.headers);
 
-    return schema.parse(request.headers);
+    return { accessToken: parsedSchema.authorization };
   }
 }

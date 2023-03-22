@@ -7,12 +7,13 @@ export class GetUserHttpRequestParser extends ZodHttpRequestParser<GetUserReques
   // eslint-disable-next-line class-methods-use-this
   protected parseRequest(request: HttpRequest): GetUserRequest {
     const schema = z.object({
-      accessToken: z
+      authorization: z
         .string()
         .startsWith('Bearer ')
         .transform((token) => token.split('Bearer ')[1]),
     });
+    const parsedSchema = schema.parse(request.headers);
 
-    return schema.parse(request.headers);
+    return { accessToken: parsedSchema.authorization };
   }
 }
