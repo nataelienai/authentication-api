@@ -1,6 +1,7 @@
 import { ChangeEmailRequest } from '@/application/use-cases/change-email';
 import { HttpRequest } from '@/presentation/ports/http-request';
 import { z } from 'zod';
+import { authorizationSchema } from './schemas/authorization-schema';
 import { ZodHttpRequestParser } from './zod-http-request-parser';
 
 export class ChangeEmailHttpRequestParser extends ZodHttpRequestParser<ChangeEmailRequest> {
@@ -8,10 +9,7 @@ export class ChangeEmailHttpRequestParser extends ZodHttpRequestParser<ChangeEma
   protected parseRequest(request: HttpRequest): ChangeEmailRequest {
     const schema = z.object({
       headers: z.object({
-        authorization: z
-          .string()
-          .startsWith('Bearer ')
-          .transform((token) => token.split('Bearer ')[1]),
+        authorization: authorizationSchema,
       }),
       body: z.object({
         email: z.string(),

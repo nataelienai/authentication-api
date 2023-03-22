@@ -1,6 +1,7 @@
 import { ChangePasswordRequest } from '@/application/use-cases/change-password';
 import { HttpRequest } from '@/presentation/ports/http-request';
 import { z } from 'zod';
+import { authorizationSchema } from './schemas/authorization-schema';
 import { ZodHttpRequestParser } from './zod-http-request-parser';
 
 export class ChangePasswordHttpRequestParser extends ZodHttpRequestParser<ChangePasswordRequest> {
@@ -8,10 +9,7 @@ export class ChangePasswordHttpRequestParser extends ZodHttpRequestParser<Change
   protected parseRequest(request: HttpRequest): ChangePasswordRequest {
     const schema = z.object({
       headers: z.object({
-        authorization: z
-          .string()
-          .startsWith('Bearer ')
-          .transform((token) => token.split('Bearer ')[1]),
+        authorization: authorizationSchema,
       }),
       body: z.object({
         password: z.string(),
