@@ -11,7 +11,13 @@ export abstract class ZodHttpRequestParser<T> implements HttpRequestParser<T> {
       return right(useCaseRequest);
     } catch (error) {
       if (error instanceof ZodError) {
-        return left(new InvalidHttpRequestError(error.message));
+        const { fieldErrors } = error.flatten();
+        return left(
+          new InvalidHttpRequestError(
+            'Validation error',
+            fieldErrors as Record<string, string[]>,
+          ),
+        );
       }
       throw error;
     }
