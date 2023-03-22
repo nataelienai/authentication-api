@@ -7,7 +7,12 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, notFound, ok } from '../utils/http-responses';
+import {
+  badRequest,
+  ErrorResponse,
+  notFound,
+  ok,
+} from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class ChangeEmailController extends Controller<
@@ -32,7 +37,7 @@ export class ChangeEmailController extends Controller<
 
   protected async execute(
     changeEmailRequest: ChangeEmailRequest,
-  ): Promise<HttpResponse<Error | ChangeEmailResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | ChangeEmailResponse>> {
     const errorOrChangeEmailResponse = await this.changeEmail.execute(
       changeEmailRequest,
     );
@@ -41,10 +46,10 @@ export class ChangeEmailController extends Controller<
       const error = errorOrChangeEmailResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return notFound(error);
+        return notFound({ message: error.message });
       }
 
-      return badRequest(error);
+      return badRequest({ message: error.message });
     }
 
     const changeEmailResponse = errorOrChangeEmailResponse.value;

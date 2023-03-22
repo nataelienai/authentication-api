@@ -7,7 +7,12 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, notFound, ok } from '../utils/http-responses';
+import {
+  badRequest,
+  ErrorResponse,
+  notFound,
+  ok,
+} from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class ChangePasswordController extends Controller<
@@ -32,7 +37,7 @@ export class ChangePasswordController extends Controller<
 
   protected async execute(
     changePasswordRequest: ChangePasswordRequest,
-  ): Promise<HttpResponse<Error | ChangePasswordResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | ChangePasswordResponse>> {
     const errorOrChangePasswordResponse = await this.changePassword.execute(
       changePasswordRequest,
     );
@@ -41,10 +46,10 @@ export class ChangePasswordController extends Controller<
       const error = errorOrChangePasswordResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return notFound(error);
+        return notFound({ message: error.message });
       }
 
-      return badRequest(error);
+      return badRequest({ message: error.message });
     }
 
     const changePasswordResponse = errorOrChangePasswordResponse.value;

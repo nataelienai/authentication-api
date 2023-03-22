@@ -7,7 +7,12 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, notFound, ok } from '../utils/http-responses';
+import {
+  badRequest,
+  ErrorResponse,
+  notFound,
+  ok,
+} from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class GetUserController extends Controller<
@@ -32,17 +37,17 @@ export class GetUserController extends Controller<
 
   protected async execute(
     getUserRequest: GetUserRequest,
-  ): Promise<HttpResponse<Error | GetUserResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | GetUserResponse>> {
     const errorOrGetUserResponse = await this.getUser.execute(getUserRequest);
 
     if (errorOrGetUserResponse.isLeft()) {
       const error = errorOrGetUserResponse.value;
 
       if (error instanceof UserNotFoundError) {
-        return notFound(error);
+        return notFound({ message: error.message });
       }
 
-      return badRequest(error);
+      return badRequest({ message: error.message });
     }
 
     const getUserResponse = errorOrGetUserResponse.value;

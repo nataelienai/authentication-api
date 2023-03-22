@@ -7,7 +7,12 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, conflict, created } from '../utils/http-responses';
+import {
+  badRequest,
+  conflict,
+  created,
+  ErrorResponse,
+} from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class SignUpController extends Controller<
@@ -32,17 +37,17 @@ export class SignUpController extends Controller<
 
   protected async execute(
     signUpRequest: SignUpRequest,
-  ): Promise<HttpResponse<Error | SignUpResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | SignUpResponse>> {
     const errorOrSignUpResponse = await this.signUp.execute(signUpRequest);
 
     if (errorOrSignUpResponse.isLeft()) {
       const error = errorOrSignUpResponse.value;
 
       if (error instanceof EmailAlreadyExistsError) {
-        return conflict(error);
+        return conflict({ message: error.message });
       }
 
-      return badRequest(error);
+      return badRequest({ message: error.message });
     }
 
     const signUpResponse = errorOrSignUpResponse.value;

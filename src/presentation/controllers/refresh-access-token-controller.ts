@@ -6,7 +6,7 @@ import {
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, ok } from '../utils/http-responses';
+import { badRequest, ErrorResponse, ok } from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class RefreshAccessTokenController extends Controller<
@@ -31,13 +31,13 @@ export class RefreshAccessTokenController extends Controller<
 
   protected async execute(
     refreshAccessTokenRequest: RefreshAccessTokenRequest,
-  ): Promise<HttpResponse<Error | RefreshAccessTokenResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | RefreshAccessTokenResponse>> {
     const errorOrRefreshAccessTokenResponse =
       await this.refreshAccessToken.execute(refreshAccessTokenRequest);
 
     if (errorOrRefreshAccessTokenResponse.isLeft()) {
       const error = errorOrRefreshAccessTokenResponse.value;
-      return badRequest(error);
+      return badRequest({ message: error.message });
     }
 
     const refreshAccessTokenResponse = errorOrRefreshAccessTokenResponse.value;
