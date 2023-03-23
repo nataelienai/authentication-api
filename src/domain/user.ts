@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/shared/either';
 import { Optional } from '@/shared/optional';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Email } from './email';
 import { InvalidTimestampsError } from './errors/invalid-timestamps-error';
 import { HashedPassword } from './hashed-password';

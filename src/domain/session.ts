@@ -1,5 +1,5 @@
 import { Optional } from '@/shared/optional';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 interface SessionProps {
   id: string;
