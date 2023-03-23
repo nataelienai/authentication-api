@@ -48,7 +48,7 @@ export class RedisSessionRepository implements SessionRepository {
       typeof document.value.refreshToken !== 'string' ||
       typeof document.value.userId !== 'string'
     ) {
-      throw new Error(
+      throw new TypeError(
         `Stored session with refresh token '${refreshToken}' is invalid`,
       );
     }
