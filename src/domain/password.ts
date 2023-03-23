@@ -3,7 +3,7 @@ import { InvalidPasswordError } from './errors/invalid-password-error';
 
 export class Password {
   private static readonly FORMAT_REGEXP =
-    /^[A-Za-z0-9~!@#$%^&*_\-+=`|\\(){}[\]:;"'<>,.?/]+$/;
+    /^[\w!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+$/;
 
   private static readonly MIN_LENGTH = 8;
 
