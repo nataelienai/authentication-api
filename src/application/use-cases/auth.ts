@@ -87,6 +87,8 @@ export class Auth {
     }
 
     await this.sessionRepository.deleteByAccessToken(accessToken);
+
+    // eslint-disable-next-line unicorn/no-useless-undefined
     return right(undefined);
   }
 

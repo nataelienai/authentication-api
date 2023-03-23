@@ -37,6 +37,7 @@ export class DeleteUser {
       this.auth.revokeAccessFromUser(userId),
     ]);
 
+    // eslint-disable-next-line unicorn/no-useless-undefined
     return right(undefined);
   }
 }
