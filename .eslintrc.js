@@ -12,6 +12,7 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:security/recommended',
     'plugin:promise/recommended',
+    'plugin:unicorn/recommended',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
@@ -20,7 +21,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'jest', 'security', 'promise'],
+  plugins: ['@typescript-eslint', 'jest', 'security', 'promise', 'unicorn'],
   rules: {
     // https://basarat.gitbook.io/typescript/main-1/defaultisbad
     'import/prefer-default-export': 'off',
@@ -34,6 +35,10 @@ module.exports = {
       'error',
       { functions: false, classes: true, variables: true, typedefs: true },
     ],
+    // Common abbreviations are known and readable
+    'unicorn/prevent-abbreviations': 'off',
+    // Airbnb prefers forEach
+    'unicorn/no-array-for-each': 'off',
   },
   settings: {
     'import/resolver': {
@@ -46,6 +51,7 @@ module.exports = {
       rules: {
         // Allow CommonJS until ES Modules support improves
         '@typescript-eslint/no-var-requires': 'off',
+        'unicorn/prefer-module': 'off',
       },
     },
   ],
