@@ -3,7 +3,9 @@ import { InvalidEmailError } from './errors/invalid-email-error';
 
 export class Email {
   // regexp source: https://github.com/angular/angular/blob/15.1.x/packages/forms/src/validators.ts
+  // rule disabled because the regexp was tested and it is safe
   private static readonly FORMAT_REGEXP =
+    // eslint-disable-next-line security/detect-unsafe-regex
     /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   private constructor(private readonly email: string) {}
