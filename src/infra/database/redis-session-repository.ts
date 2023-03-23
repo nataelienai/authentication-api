@@ -31,14 +31,14 @@ export class RedisSessionRepository implements SessionRepository {
     });
   }
 
-  async findByRefreshToken(refreshToken: string) {
+  async findByRefreshToken(refreshToken: string): Promise<Session | undefined> {
     const result = await this.redis.ft.search(
       RedisSessionRepository.INDEX_NAME,
       `@refreshToken:${refreshToken}`,
     );
 
     if (result.total === 0) {
-      return null;
+      return undefined;
     }
 
     const document = result.documents[0];

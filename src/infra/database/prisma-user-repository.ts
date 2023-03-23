@@ -31,21 +31,21 @@ export class PrismaUserRepository implements UserRepository {
     return Boolean(storedUser);
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User | undefined> {
     const storedUser = await this.prisma.user.findUnique({ where: { email } });
 
     if (!storedUser) {
-      return null;
+      return undefined;
     }
 
     return PrismaUserRepository.mapToDomainUser(storedUser);
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | undefined> {
     const storedUser = await this.prisma.user.findUnique({ where: { id } });
 
     if (!storedUser) {
-      return null;
+      return undefined;
     }
 
     return PrismaUserRepository.mapToDomainUser(storedUser);
