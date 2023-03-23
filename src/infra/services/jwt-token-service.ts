@@ -16,23 +16,27 @@ export class JwtTokenService implements TokenService {
     private readonly refreshTokenSecret: string,
   ) {}
 
-  async generateAccessToken(userId: string) {
-    return JwtTokenService.generateToken(
-      userId,
-      this.accessTokenSecret,
-      JwtTokenService.ACCESS_TOKEN_EXPIRES_IN,
+  generateAccessToken(userId: string) {
+    return Promise.resolve(
+      JwtTokenService.generateToken(
+        userId,
+        this.accessTokenSecret,
+        JwtTokenService.ACCESS_TOKEN_EXPIRES_IN,
+      ),
     );
   }
 
-  async generateRefreshToken(userId: string) {
-    return JwtTokenService.generateToken(
-      userId,
-      this.refreshTokenSecret,
-      JwtTokenService.REFRESH_TOKEN_EXPIRES_IN,
+  generateRefreshToken(userId: string) {
+    return Promise.resolve(
+      JwtTokenService.generateToken(
+        userId,
+        this.refreshTokenSecret,
+        JwtTokenService.REFRESH_TOKEN_EXPIRES_IN,
+      ),
     );
   }
 
-  async decodeAccessToken(
+  decodeAccessToken(
     token: string,
   ): Promise<Either<InvalidTokenError, DecodedPayload>> {
     return Promise.resolve(
@@ -40,7 +44,7 @@ export class JwtTokenService implements TokenService {
     );
   }
 
-  async decodeRefreshToken(
+  decodeRefreshToken(
     token: string,
   ): Promise<Either<InvalidTokenError, DecodedPayload>> {
     return Promise.resolve(
@@ -53,7 +57,7 @@ export class JwtTokenService implements TokenService {
     return errorOrDecodedPayload.isRight();
   }
 
-  private static async generateToken(
+  private static generateToken(
     userId: string,
     secret: string,
     expiresIn: string,
@@ -63,7 +67,7 @@ export class JwtTokenService implements TokenService {
       expiresIn,
     });
 
-    return Promise.resolve(token);
+    return token;
   }
 
   private static decodeToken(
