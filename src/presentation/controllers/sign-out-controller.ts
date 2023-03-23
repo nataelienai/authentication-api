@@ -32,6 +32,6 @@ export class SignOutController extends Controller<SignOutRequest, void> {
       return badRequest({ message: error.message });
     }
 
-    return noContent(undefined);
+    return noContent();
   }
 }

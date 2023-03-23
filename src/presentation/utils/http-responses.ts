@@ -15,9 +15,8 @@ export const created = <T>(data: T): HttpResponse<T> => ({
   body: data,
 });
 
-export const noContent = <T>(data: T): HttpResponse<T> => ({
+export const noContent = (): HttpResponse<void> => ({
   statusCode: 204,
-  body: data,
 });
 
 export const badRequest = (

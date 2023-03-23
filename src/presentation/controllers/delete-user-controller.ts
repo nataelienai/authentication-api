@@ -46,6 +46,6 @@ export class DeleteUserController extends Controller<DeleteUserRequest, void> {
       return badRequest({ message: error.message });
     }
 
-    return noContent(undefined);
+    return noContent();
   }
 }
