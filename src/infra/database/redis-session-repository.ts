@@ -24,11 +24,7 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async update(session: Session) {
-    await this.redis.json.set(RedisSessionRepository.makeKey(session.id), '$', {
-      accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
-      userId: session.userId,
-    });
+    await this.create(session);
   }
 
   async findByRefreshToken(refreshToken: string): Promise<Session | undefined> {
