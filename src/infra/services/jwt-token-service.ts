@@ -78,7 +78,7 @@ export class JwtTokenService implements TokenService {
 
     try {
       jwtPayload = jwt.verify(token, secret);
-    } catch (e) {
+    } catch {
       return left(new InvalidTokenError());
     }
 
