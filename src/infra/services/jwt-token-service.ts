@@ -62,12 +62,10 @@ export class JwtTokenService implements TokenService {
     secret: string,
     expiresIn: string,
   ) {
-    const token = jwt.sign({}, secret, {
+    return jwt.sign({}, secret, {
       subject: userId,
       expiresIn,
     });
-
-    return token;
   }
 
   private static decodeToken(
