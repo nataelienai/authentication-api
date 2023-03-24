@@ -43,6 +43,8 @@ module.exports = {
       'error',
       { functions: false, classes: true, variables: true, typedefs: true },
     ],
+    // It is the responsiblity of the formatting tool
+    '@typescript-eslint/lines-between-class-members': 'off',
     // Common abbreviations are known and readable
     'unicorn/prevent-abbreviations': 'off',
     // Airbnb prefers forEach
