@@ -2,10 +2,9 @@ import { Either, left, right } from '@/shared/either';
 import { InvalidPasswordError } from './errors/invalid-password-error';
 
 export class Password {
-  private static readonly FORMAT_REGEXP =
-    /^[\w!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+$/;
-
   private static readonly MIN_LENGTH = 8;
+  private static readonly FORMAT_REGEX =
+    /^[\w!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+$/;
 
   private constructor(private readonly password: string) {}
 
@@ -38,6 +37,6 @@ export class Password {
   }
 
   static hasValidCharacters(password: string) {
-    return password.match(Password.FORMAT_REGEXP);
+    return password.match(Password.FORMAT_REGEX);
   }
 }
