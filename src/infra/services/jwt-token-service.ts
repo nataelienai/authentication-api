@@ -8,7 +8,6 @@ import { Either, left, right } from '@/shared/either';
 
 export class JwtTokenService implements TokenService {
   private static readonly ACCESS_TOKEN_EXPIRES_IN = '1h';
-
   private static readonly REFRESH_TOKEN_EXPIRES_IN = '30d';
 
   constructor(

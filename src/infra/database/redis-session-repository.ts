@@ -4,7 +4,6 @@ import { ErrorReply, RedisClientType, SchemaFieldTypes } from 'redis';
 
 export class RedisSessionRepository implements SessionRepository {
   private static readonly INDEX_NAME = 'idx:session';
-
   private static readonly KEY_PREFIX = 'session:';
 
   private constructor(private readonly redis: RedisClientType) {}
