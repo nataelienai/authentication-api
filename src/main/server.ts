@@ -9,6 +9,8 @@ import { getChangePasswordController } from './instances/change-password-control
 import { getDeleteUserController } from './instances/delete-user-controller';
 import { getHttpServer } from './instances/http-server';
 
+const PORT = 3000;
+
 async function run() {
   const controllers = await Promise.all([
     getSignInController(),
@@ -25,8 +27,8 @@ async function run() {
 
   controllers.forEach((controller) => httpServer.register(controller));
 
-  httpServer.listen(3000, () =>
-    console.log('HTTP server listening on port 3000'),
+  httpServer.listen(PORT, () =>
+    console.log(`HTTP server listening on port ${PORT}`),
   );
 }
 
