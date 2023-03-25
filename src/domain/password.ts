@@ -13,7 +13,7 @@ export class Password {
   }
 
   static create(password: string): Either<InvalidPasswordError, Password> {
-    if (!this.hasMinLength(password)) {
+    if (!Password.hasMinLength(password)) {
       return left(
         new InvalidPasswordError(
           `The password must be at least ${Password.MIN_LENGTH} characters long`,
@@ -21,7 +21,7 @@ export class Password {
       );
     }
 
-    if (!this.hasValidCharacters(password)) {
+    if (!Password.hasValidCharacters(password)) {
       return left(
         new InvalidPasswordError(
           'The password must have only letters, numbers and the symbols: ~!@#$%^&*_-+=`|\\(){}[]:;"\'<>,.?/',
@@ -32,11 +32,11 @@ export class Password {
     return right(new Password(password));
   }
 
-  static hasMinLength(password: string) {
+  private static hasMinLength(password: string) {
     return password.length < Password.MIN_LENGTH;
   }
 
-  static hasValidCharacters(password: string) {
+  private static hasValidCharacters(password: string) {
     return Password.FORMAT_REGEX.test(password);
   }
 }
