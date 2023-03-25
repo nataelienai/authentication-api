@@ -37,6 +37,6 @@ export class Password {
   }
 
   static hasValidCharacters(password: string) {
-    return password.match(Password.FORMAT_REGEX);
+    return Password.FORMAT_REGEX.test(password);
   }
 }
