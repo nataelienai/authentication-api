@@ -80,9 +80,9 @@ export class PrismaUserRepository implements UserRepository {
     const errorOrUser = User.create({
       id: storedUser.id,
       email: errorOrEmail.value,
-      hashedPassword,
       createdAt: storedUser.createdAt,
       updatedAt: storedUser.updatedAt,
+      hashedPassword,
     });
 
     if (errorOrUser.isLeft()) {
