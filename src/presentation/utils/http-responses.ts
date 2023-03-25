@@ -39,3 +39,10 @@ export const conflict = (
   statusCode: 409,
   body: error,
 });
+
+export const internalServerError = (): HttpResponse<ErrorResponse> => ({
+  statusCode: 500,
+  body: {
+    message: 'Internal Server Error',
+  },
+});

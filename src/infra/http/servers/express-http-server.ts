@@ -3,6 +3,7 @@ import cors from 'cors';
 import { HttpController } from '@/presentation/ports/http-controller';
 import { HttpServer } from '@/presentation/ports/http-server';
 import { HttpRequest } from '@/presentation/ports/http-request';
+import { internalServerError } from '@/presentation/utils/http-responses';
 
 export class ExpressHttpServer implements HttpServer {
   private readonly app: express.Express;
@@ -29,9 +30,10 @@ export class ExpressHttpServer implements HttpServer {
         .then((httpResponse) =>
           response.status(httpResponse.statusCode).json(httpResponse.body),
         )
-        .catch(() =>
-          response.status(500).json({ message: 'Internal Server Error' }),
-        );
+        .catch(() => {
+          const httpResponse = internalServerError();
+          response.status(httpResponse.statusCode).json(httpResponse.body);
+        });
     });
   }
 
