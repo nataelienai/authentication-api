@@ -16,7 +16,7 @@ interface UserProps {
 type CreateUserProps = Optional<UserProps, 'id' | 'createdAt' | 'updatedAt'>;
 
 export class User {
-  private constructor(private props: UserProps) {}
+  private constructor(private readonly props: UserProps) {}
 
   get id() {
     return this.props.id;

@@ -11,7 +11,7 @@ interface SessionProps {
 type CreateSessionProps = Optional<SessionProps, 'id'>;
 
 export class Session {
-  private constructor(private props: SessionProps) {}
+  private constructor(private readonly props: SessionProps) {}
 
   get id() {
     return this.props.id;
