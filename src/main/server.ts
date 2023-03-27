@@ -8,8 +8,9 @@ import { getChangePasswordController } from './instances/change-password-control
 import { getDeleteUserController } from './instances/delete-user-controller';
 import { getHttpServer } from './instances/http-server';
 import { getLogger } from './instances/logger';
+import { env } from './env';
 
-const PORT = 3000;
+const { PORT } = env;
 const logger = getLogger();
 
 async function run() {
