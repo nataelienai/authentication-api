@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { getSignUpController } from './instances/sign-up-controller';
 import { getSignInController } from './instances/sign-in-controller';
 import { getSignOutController } from './instances/sign-out-controller';
@@ -8,8 +7,10 @@ import { getChangeEmailController } from './instances/change-email-controller';
 import { getChangePasswordController } from './instances/change-password-controller';
 import { getDeleteUserController } from './instances/delete-user-controller';
 import { getHttpServer } from './instances/http-server';
+import { getLogger } from './instances/logger';
 
 const PORT = 3000;
+const logger = getLogger();
 
 async function run() {
   const controllers = await Promise.all([
@@ -28,9 +29,19 @@ async function run() {
   controllers.forEach((controller) => httpServer.register(controller));
 
   httpServer.listen(PORT, () =>
-    console.log(`HTTP server listening on port ${PORT}`),
+    logger.info(`HTTP server listening on port ${PORT}`),
   );
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-run().catch(console.error);
+run().catch((error) => {
+  logger.error(error);
+});
+
+process.on('uncaughtException', (error) => {
+  logger.error(error);
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error(reason);
+});
