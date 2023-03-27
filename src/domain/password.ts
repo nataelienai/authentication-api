@@ -33,7 +33,7 @@ export class Password {
   }
 
   private static hasMinLength(password: string) {
-    return password.length < Password.MIN_LENGTH;
+    return password.length >= Password.MIN_LENGTH;
   }
 
   private static hasValidCharacters(password: string) {
