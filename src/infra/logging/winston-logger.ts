@@ -22,6 +22,13 @@ export class WinstonLogger implements Logger {
     this.logger.info(message);
   }
 
+  warn(message: string): void;
+  warn(error: string): void;
+  warn(reason: unknown): void;
+  warn(messageOrErrorOrReason: unknown): void {
+    this.logger.warn(messageOrErrorOrReason);
+  }
+
   error(message: string): void;
   error(error: Error): void;
   error(reason: unknown): void;
