@@ -4,11 +4,12 @@ import { HttpController } from '@/presentation/ports/http-controller';
 import { HttpServer } from '@/presentation/ports/http-server';
 import { HttpRequest } from '@/presentation/ports/http-request';
 import { internalServerError } from '@/presentation/utils/http-responses';
+import { Logger } from '@/infra/logging/logger';
 
 export class ExpressHttpServer implements HttpServer {
   private readonly app: express.Express;
 
-  constructor() {
+  constructor(private readonly logger: Logger) {
     this.app = express();
     this.app.use(express.json());
     this.app.use(cors());
@@ -30,7 +31,9 @@ export class ExpressHttpServer implements HttpServer {
         .then((httpResponse) =>
           response.status(httpResponse.statusCode).json(httpResponse.body),
         )
-        .catch(() => {
+        .catch((error) => {
+          this.logger.warn(error);
+
           const httpResponse = internalServerError();
           response.status(httpResponse.statusCode).json(httpResponse.body);
         });
