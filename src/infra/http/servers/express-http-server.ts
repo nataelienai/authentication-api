@@ -18,7 +18,7 @@ export class ExpressHttpServer implements HttpServer {
   register(controller: HttpController) {
     const { method, path } = controller.route;
 
-    // rule disabled because an invalid 'method' will cause typing error
+    // rule disabled because an invalid 'method' will already cause TS error
     // eslint-disable-next-line security/detect-object-injection
     this.app[method](path, (request, response) => {
       const httpRequest: HttpRequest = {
