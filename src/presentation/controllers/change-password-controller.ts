@@ -2,7 +2,6 @@ import { UserNotFoundError } from '@/application/errors/user-not-found-error';
 import {
   ChangePassword,
   ChangePasswordRequest,
-  ChangePasswordResponse,
 } from '@/application/use-cases/change-password';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
@@ -14,10 +13,15 @@ import {
   ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
+import { UserDto, UserMapper } from './mappers/user-mapper';
+
+type ChangePasswordControllerResponse = {
+  user: UserDto;
+};
 
 export class ChangePasswordController extends Controller<
   ChangePasswordRequest,
-  ChangePasswordResponse
+  ChangePasswordControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'patch',
@@ -37,7 +41,7 @@ export class ChangePasswordController extends Controller<
 
   protected async execute(
     changePasswordRequest: ChangePasswordRequest,
-  ): Promise<HttpResponse<ErrorResponse | ChangePasswordResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | ChangePasswordControllerResponse>> {
     const errorOrChangePasswordResponse = await this.changePassword.execute(
       changePasswordRequest,
     );
@@ -53,6 +57,8 @@ export class ChangePasswordController extends Controller<
     }
 
     const changePasswordResponse = errorOrChangePasswordResponse.value;
-    return ok(changePasswordResponse);
+    const user = UserMapper.mapToDto(changePasswordResponse.user);
+
+    return ok({ user });
   }
 }
