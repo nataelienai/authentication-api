@@ -26,6 +26,13 @@ export const badRequest = (
   body: error,
 });
 
+export const unauthorized = (
+  error: ErrorResponse,
+): HttpResponse<ErrorResponse> => ({
+  statusCode: 401,
+  body: error,
+});
+
 export const notFound = (
   error: ErrorResponse,
 ): HttpResponse<ErrorResponse> => ({
