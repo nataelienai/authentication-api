@@ -4,10 +4,10 @@ import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
 import {
-  badRequest,
   ErrorResponse,
   notFound,
   ok,
+  unauthorized,
 } from '../utils/http-responses';
 import { Controller } from './controller';
 import { SessionDto, SessionMapper } from './mappers/session-mapper';
@@ -50,7 +50,7 @@ export class SignInController extends Controller<
         return notFound({ message: error.message });
       }
 
-      return badRequest({ message: error.message });
+      return unauthorized({ message: error.message });
     }
 
     const signInResponse = errorOrSignInResponse.value;

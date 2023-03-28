@@ -2,7 +2,11 @@ import { SignOut, SignOutRequest } from '@/application/use-cases/sign-out';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
-import { badRequest, ErrorResponse, noContent } from '../utils/http-responses';
+import {
+  ErrorResponse,
+  noContent,
+  unauthorized,
+} from '../utils/http-responses';
 import { Controller } from './controller';
 
 export class SignOutController extends Controller<SignOutRequest, void> {
@@ -29,7 +33,7 @@ export class SignOutController extends Controller<SignOutRequest, void> {
 
     if (errorOrVoid.isLeft()) {
       const error = errorOrVoid.value;
-      return badRequest({ message: error.message });
+      return unauthorized({ message: error.message });
     }
 
     return noContent();

@@ -1,3 +1,4 @@
+import { InvalidTokenError } from '@/application/errors/invalid-token-error';
 import { UserNotFoundError } from '@/application/errors/user-not-found-error';
 import {
   ChangePassword,
@@ -11,6 +12,7 @@ import {
   ErrorResponse,
   noContent,
   notFound,
+  unauthorized,
 } from '../utils/http-responses';
 import { Controller } from './controller';
 
@@ -46,6 +48,10 @@ export class ChangePasswordController extends Controller<
 
       if (error instanceof UserNotFoundError) {
         return notFound({ message: error.message });
+      }
+
+      if (error instanceof InvalidTokenError) {
+        return unauthorized({ message: error.message });
       }
 
       return badRequest({ message: error.message });
