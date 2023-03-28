@@ -1,9 +1,5 @@
 import { UserNotFoundError } from '@/application/errors/user-not-found-error';
-import {
-  GetUser,
-  GetUserRequest,
-  GetUserResponse,
-} from '@/application/use-cases/get-user';
+import { GetUser, GetUserRequest } from '@/application/use-cases/get-user';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
@@ -14,10 +10,15 @@ import {
   ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
+import { UserDto, UserMapper } from './mappers/user-mapper';
+
+type GetUserControllerResponse = {
+  user: UserDto;
+};
 
 export class GetUserController extends Controller<
   GetUserRequest,
-  GetUserResponse
+  GetUserControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'get',
@@ -37,7 +38,7 @@ export class GetUserController extends Controller<
 
   protected async execute(
     getUserRequest: GetUserRequest,
-  ): Promise<HttpResponse<ErrorResponse | GetUserResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | GetUserControllerResponse>> {
     const errorOrGetUserResponse = await this.getUser.execute(getUserRequest);
 
     if (errorOrGetUserResponse.isLeft()) {
@@ -51,6 +52,8 @@ export class GetUserController extends Controller<
     }
 
     const getUserResponse = errorOrGetUserResponse.value;
-    return ok(getUserResponse);
+    const user = UserMapper.mapToDto(getUserResponse.user);
+
+    return ok({ user });
   }
 }
