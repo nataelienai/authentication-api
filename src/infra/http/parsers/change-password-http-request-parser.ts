@@ -7,19 +7,20 @@ import { ZodHttpRequestParser } from './zod-http-request-parser';
 export class ChangePasswordHttpRequestParser extends ZodHttpRequestParser<ChangePasswordRequest> {
   // eslint-disable-next-line class-methods-use-this
   protected parseRequest(request: HttpRequest): ChangePasswordRequest {
-    const schema = z.object({
-      headers: z.object({
-        authorization: authorizationSchema,
-      }),
-      body: z.object({
-        password: z.string(),
-      }),
+    const headersSchema = z.object({
+      authorization: authorizationSchema,
     });
-    const parsedRequest = schema.parse(request);
+
+    const bodySchema = z.object({
+      password: z.string(),
+    });
+
+    const parsedHeadersSchema = headersSchema.parse(request.headers);
+    const parsedBodySchema = bodySchema.parse(request.body);
 
     return {
-      password: parsedRequest.body.password,
-      accessToken: parsedRequest.headers.authorization,
+      accessToken: parsedHeadersSchema.authorization,
+      password: parsedBodySchema.password,
     };
   }
 }
