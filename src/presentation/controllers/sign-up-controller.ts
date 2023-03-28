@@ -1,9 +1,5 @@
 import { EmailAlreadyExistsError } from '@/application/errors/email-already-exists-error';
-import {
-  SignUp,
-  SignUpRequest,
-  SignUpResponse,
-} from '@/application/use-cases/sign-up';
+import { SignUp, SignUpRequest } from '@/application/use-cases/sign-up';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
@@ -14,10 +10,17 @@ import {
   ErrorResponse,
 } from '../utils/http-responses';
 import { Controller } from './controller';
+import { SessionDto, SessionMapper } from './mappers/session-mapper';
+import { UserDto, UserMapper } from './mappers/user-mapper';
+
+type SignUpControllerResponse = {
+  user: UserDto;
+  session: SessionDto;
+};
 
 export class SignUpController extends Controller<
   SignUpRequest,
-  SignUpResponse
+  SignUpControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'post',
@@ -37,7 +40,7 @@ export class SignUpController extends Controller<
 
   protected async execute(
     signUpRequest: SignUpRequest,
-  ): Promise<HttpResponse<ErrorResponse | SignUpResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | SignUpControllerResponse>> {
     const errorOrSignUpResponse = await this.signUp.execute(signUpRequest);
 
     if (errorOrSignUpResponse.isLeft()) {
@@ -51,6 +54,9 @@ export class SignUpController extends Controller<
     }
 
     const signUpResponse = errorOrSignUpResponse.value;
-    return created(signUpResponse);
+    const user = UserMapper.mapToDto(signUpResponse.user);
+    const session = SessionMapper.mapToDto(signUpResponse.session);
+
+    return created({ user, session });
   }
 }
