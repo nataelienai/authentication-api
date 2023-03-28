@@ -14,16 +14,17 @@ const { PORT } = env;
 const logger = getLogger();
 
 async function run() {
-  const controllers = await Promise.all([
-    getSignInController(),
-    getSignUpController(),
-    getSignOutController(),
-    getRefreshAccessTokenController(),
-    getGetUserController(),
-    getChangeEmailController(),
-    getChangePasswordController(),
-    getDeleteUserController(),
-  ]);
+  // cannot Promise.all because of concurrent database index creation
+  const controllers = [
+    await getSignInController(),
+    await getSignUpController(),
+    await getSignOutController(),
+    await getRefreshAccessTokenController(),
+    await getGetUserController(),
+    await getChangeEmailController(),
+    await getChangePasswordController(),
+    await getDeleteUserController(),
+  ];
 
   const httpServer = getHttpServer();
 
