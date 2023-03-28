@@ -1,9 +1,5 @@
 import { UserNotFoundError } from '@/application/errors/user-not-found-error';
-import {
-  SignIn,
-  SignInRequest,
-  SignInResponse,
-} from '@/application/use-cases/sign-in';
+import { SignIn, SignInRequest } from '@/application/use-cases/sign-in';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
@@ -14,10 +10,17 @@ import {
   ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
+import { SessionDto, SessionMapper } from './mappers/session-mapper';
+import { UserDto, UserMapper } from './mappers/user-mapper';
+
+type SignInControllerResponse = {
+  user: UserDto;
+  session: SessionDto;
+};
 
 export class SignInController extends Controller<
   SignInRequest,
-  SignInResponse
+  SignInControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'post',
@@ -37,7 +40,7 @@ export class SignInController extends Controller<
 
   protected async execute(
     signInRequest: SignInRequest,
-  ): Promise<HttpResponse<ErrorResponse | SignInResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | SignInControllerResponse>> {
     const errorOrSignInResponse = await this.signIn.execute(signInRequest);
 
     if (errorOrSignInResponse.isLeft()) {
@@ -51,6 +54,9 @@ export class SignInController extends Controller<
     }
 
     const signInResponse = errorOrSignInResponse.value;
-    return ok(signInResponse);
+    const user = UserMapper.mapToDto(signInResponse.user);
+    const session = SessionMapper.mapToDto(signInResponse.session);
+
+    return ok({ user, session });
   }
 }
