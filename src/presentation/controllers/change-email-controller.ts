@@ -9,19 +9,14 @@ import { HttpRoute } from '../ports/http-route';
 import {
   badRequest,
   ErrorResponse,
+  noContent,
   notFound,
-  ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
-import { UserDto, UserMapper } from './mappers/user-mapper';
-
-type ChangeEmailControllerResponse = {
-  user: UserDto;
-};
 
 export class ChangeEmailController extends Controller<
   ChangeEmailRequest,
-  ChangeEmailControllerResponse
+  void
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'patch',
@@ -41,7 +36,7 @@ export class ChangeEmailController extends Controller<
 
   protected async execute(
     changeEmailRequest: ChangeEmailRequest,
-  ): Promise<HttpResponse<ErrorResponse | ChangeEmailControllerResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | void>> {
     const errorOrChangeEmailResponse = await this.changeEmail.execute(
       changeEmailRequest,
     );
@@ -56,9 +51,6 @@ export class ChangeEmailController extends Controller<
       return badRequest({ message: error.message });
     }
 
-    const changeEmailResponse = errorOrChangeEmailResponse.value;
-    const user = UserMapper.mapToDto(changeEmailResponse.user);
-
-    return ok({ user });
+    return noContent();
   }
 }
