@@ -9,19 +9,14 @@ import { HttpRoute } from '../ports/http-route';
 import {
   badRequest,
   ErrorResponse,
+  noContent,
   notFound,
-  ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
-import { UserDto, UserMapper } from './mappers/user-mapper';
-
-type ChangePasswordControllerResponse = {
-  user: UserDto;
-};
 
 export class ChangePasswordController extends Controller<
   ChangePasswordRequest,
-  ChangePasswordControllerResponse
+  void
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'patch',
@@ -41,7 +36,7 @@ export class ChangePasswordController extends Controller<
 
   protected async execute(
     changePasswordRequest: ChangePasswordRequest,
-  ): Promise<HttpResponse<ErrorResponse | ChangePasswordControllerResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | void>> {
     const errorOrChangePasswordResponse = await this.changePassword.execute(
       changePasswordRequest,
     );
@@ -56,9 +51,6 @@ export class ChangePasswordController extends Controller<
       return badRequest({ message: error.message });
     }
 
-    const changePasswordResponse = errorOrChangePasswordResponse.value;
-    const user = UserMapper.mapToDto(changePasswordResponse.user);
-
-    return ok({ user });
+    return noContent();
   }
 }
