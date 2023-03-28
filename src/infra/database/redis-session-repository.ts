@@ -27,9 +27,12 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async findByRefreshToken(refreshToken: string): Promise<Session | undefined> {
+    const escapedRefreshToken =
+      RedisSessionRepository.escapeSpecialCharacters(refreshToken);
+
     const result = await this.redis.ft.search(
       RedisSessionRepository.INDEX_NAME,
-      `@refreshToken:${refreshToken}`,
+      `@refreshToken:{${escapedRefreshToken}}`,
     );
 
     if (result.total === 0) {
@@ -57,18 +60,24 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async existsByAccessToken(accessToken: string) {
+    const escapedAccessToken =
+      RedisSessionRepository.escapeSpecialCharacters(accessToken);
+
     const result = await this.redis.ft.search(
       RedisSessionRepository.INDEX_NAME,
-      `@accessToken:${accessToken}`,
+      `@accessToken:{${escapedAccessToken}}`,
     );
 
     return result.total > 0;
   }
 
   async deleteByAccessToken(accessToken: string) {
+    const escapedAccessToken =
+      RedisSessionRepository.escapeSpecialCharacters(accessToken);
+
     const result = await this.redis.ft.search(
       RedisSessionRepository.INDEX_NAME,
-      `@accessToken:${accessToken}`,
+      `@accessToken:{${escapedAccessToken}}`,
     );
 
     if (result.total === 0) {
@@ -80,9 +89,12 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   async deleteAllByUserId(userId: string) {
+    const escapedUserId =
+      RedisSessionRepository.escapeSpecialCharacters(userId);
+
     const result = await this.redis.ft.search(
       RedisSessionRepository.INDEX_NAME,
-      `@userId:${userId}`,
+      `@userId:{${escapedUserId}}`,
     );
 
     if (result.total === 0) {
@@ -103,9 +115,17 @@ export class RedisSessionRepository implements SessionRepository {
     await this.redis.ft.create(
       RedisSessionRepository.INDEX_NAME,
       {
-        '$.accessToken': { type: SchemaFieldTypes.TEXT, AS: 'accessToken' },
-        '$.refreshToken': { type: SchemaFieldTypes.TEXT, AS: 'refreshToken' },
-        '$.userId': { type: SchemaFieldTypes.TEXT, AS: 'userId' },
+        '$.accessToken': {
+          type: SchemaFieldTypes.TAG,
+          AS: 'accessToken',
+          CASESENSITIVE: true,
+        },
+        '$.refreshToken': {
+          type: SchemaFieldTypes.TAG,
+          AS: 'refreshToken',
+          CASESENSITIVE: true,
+        },
+        '$.userId': { type: SchemaFieldTypes.TAG, AS: 'userId' },
       },
       { ON: 'JSON', PREFIX: RedisSessionRepository.KEY_PREFIX },
     );
@@ -125,6 +145,17 @@ export class RedisSessionRepository implements SessionRepository {
 
   private static makeKey(id: string) {
     return `${RedisSessionRepository.KEY_PREFIX}${id}`;
+  }
+
+  private static escapeSpecialCharacters(idOrToken: string) {
+    const escapedChars: Record<string, string> = {
+      '.': '\\.',
+      '-': '\\-',
+    };
+
+    // rule disabled because 'char' is a tightly controlled input
+    // eslint-disable-next-line security/detect-object-injection
+    return idOrToken.replace(/[.-]/g, (char) => escapedChars[char]);
   }
 
   private static extractIdFromKey(key: string) {
