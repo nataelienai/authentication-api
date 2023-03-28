@@ -2,7 +2,6 @@ import { UserNotFoundError } from '@/application/errors/user-not-found-error';
 import {
   ChangeEmail,
   ChangeEmailRequest,
-  ChangeEmailResponse,
 } from '@/application/use-cases/change-email';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
@@ -14,10 +13,15 @@ import {
   ok,
 } from '../utils/http-responses';
 import { Controller } from './controller';
+import { UserDto, UserMapper } from './mappers/user-mapper';
+
+type ChangeEmailControllerResponse = {
+  user: UserDto;
+};
 
 export class ChangeEmailController extends Controller<
   ChangeEmailRequest,
-  ChangeEmailResponse
+  ChangeEmailControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'patch',
@@ -37,7 +41,7 @@ export class ChangeEmailController extends Controller<
 
   protected async execute(
     changeEmailRequest: ChangeEmailRequest,
-  ): Promise<HttpResponse<ErrorResponse | ChangeEmailResponse>> {
+  ): Promise<HttpResponse<ErrorResponse | ChangeEmailControllerResponse>> {
     const errorOrChangeEmailResponse = await this.changeEmail.execute(
       changeEmailRequest,
     );
@@ -53,6 +57,8 @@ export class ChangeEmailController extends Controller<
     }
 
     const changeEmailResponse = errorOrChangeEmailResponse.value;
-    return ok(changeEmailResponse);
+    const user = UserMapper.mapToDto(changeEmailResponse.user);
+
+    return ok({ user });
   }
 }
