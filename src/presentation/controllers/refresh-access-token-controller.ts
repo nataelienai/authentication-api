@@ -1,17 +1,21 @@
 import {
   RefreshAccessToken,
   RefreshAccessTokenRequest,
-  RefreshAccessTokenResponse,
 } from '@/application/use-cases/refresh-access-token';
 import { HttpRequestParser } from '../ports/http-request-parser';
 import { HttpResponse } from '../ports/http-response';
 import { HttpRoute } from '../ports/http-route';
 import { badRequest, ErrorResponse, ok } from '../utils/http-responses';
 import { Controller } from './controller';
+import { SessionDto, SessionMapper } from './mappers/session-mapper';
+
+type RefreshAccessTokenControllerResponse = {
+  session: SessionDto;
+};
 
 export class RefreshAccessTokenController extends Controller<
   RefreshAccessTokenRequest,
-  RefreshAccessTokenResponse
+  RefreshAccessTokenControllerResponse
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'post',
@@ -31,7 +35,9 @@ export class RefreshAccessTokenController extends Controller<
 
   protected async execute(
     refreshAccessTokenRequest: RefreshAccessTokenRequest,
-  ): Promise<HttpResponse<ErrorResponse | RefreshAccessTokenResponse>> {
+  ): Promise<
+    HttpResponse<ErrorResponse | RefreshAccessTokenControllerResponse>
+  > {
     const errorOrRefreshAccessTokenResponse =
       await this.refreshAccessToken.execute(refreshAccessTokenRequest);
 
@@ -41,6 +47,8 @@ export class RefreshAccessTokenController extends Controller<
     }
 
     const refreshAccessTokenResponse = errorOrRefreshAccessTokenResponse.value;
-    return ok(refreshAccessTokenResponse);
+    const session = SessionMapper.mapToDto(refreshAccessTokenResponse.session);
+
+    return ok({ session });
   }
 }
