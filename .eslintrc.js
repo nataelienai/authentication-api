@@ -49,6 +49,7 @@ module.exports = {
     'unicorn/prevent-abbreviations': 'off',
     // Airbnb prefers forEach
     'unicorn/no-array-for-each': 'off',
+    'unicorn/prefer-top-level-await': 'off',
   },
   settings: {
     'import/resolver': {

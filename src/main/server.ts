@@ -35,7 +35,6 @@ async function run() {
   );
 }
 
-// eslint-disable-next-line unicorn/prefer-top-level-await
 run().catch((error) => {
   logger.error(error);
 });
