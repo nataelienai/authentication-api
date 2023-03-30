@@ -8,8 +8,9 @@ module.exports = {
   transform: {
     '^.+\\.(ts|js)$': 'ts-jest',
   },
-  collectCoverageFrom: ['src/**/*.{js,ts}'],
-  coverageDirectory: './coverage',
+  collectCoverageFrom: ['<rootDir>/src/**/*.{js,ts}'],
+  coverageDirectory: '<rootDir>/coverage',
+  coverageProvider: 'v8',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>',
   }),
