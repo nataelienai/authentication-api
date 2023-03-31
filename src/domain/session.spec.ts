@@ -40,8 +40,8 @@ describe('Session', () => {
     });
   });
 
-  describe('set accessToken', () => {
-    test('When given any string, should update the accessToken property', () => {
+  describe('set access token', () => {
+    test('When given any string, should update the access token', () => {
       // Arrange
       const createdSession = Session.create({
         id: 'asdfghjklç1234509876',
@@ -59,8 +59,8 @@ describe('Session', () => {
     });
   });
 
-  describe('set refreshToken', () => {
-    test('When given any string, should update the refreshToken property', () => {
+  describe('set refresh token', () => {
+    test('When given any string, should update the refresh token', () => {
       // Arrange
       const createdSession = Session.create({
         id: 'asdfghjklç123450987',
