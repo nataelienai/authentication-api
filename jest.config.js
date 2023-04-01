@@ -10,7 +10,7 @@ module.exports = {
   },
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,ts}'],
   coverageDirectory: '<rootDir>/coverage',
-  coverageProvider: 'v8',
+  coverageProvider: 'babel',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>',
   }),
