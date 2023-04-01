@@ -72,12 +72,13 @@ export class User {
       );
     }
 
+    const now = new Date();
     return right(
       new User({
         ...props,
         id: props.id ?? randomUUID(),
-        createdAt: props.createdAt ?? new Date(),
-        updatedAt: props.updatedAt ?? new Date(),
+        createdAt: props.createdAt ?? now,
+        updatedAt: props.updatedAt ?? now,
       }),
     );
   }
