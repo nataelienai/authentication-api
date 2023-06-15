@@ -135,4 +135,58 @@ describe('Auth', () => {
       expect(errorOrDecodedPayload.value).toHaveProperty('userId', userId);
     });
   });
+
+  describe('revokeAccessToken', () => {
+    let tokenService: TokenService;
+    let sessionRepository: SessionRepository;
+    let auth: Auth;
+
+    beforeEach(() => {
+      tokenService = new FakeTokenService();
+      sessionRepository = new InMemorySessionRepository();
+      auth = new Auth(tokenService, sessionRepository);
+    });
+
+    test('When access token decodification fails, should return an error', async () => {
+      // Arrange
+      const token = 'invalid_token';
+
+      // Act
+      const errorOrDecodedPayload = await auth.revokeAccessToken(token);
+
+      // Assert
+      expect(errorOrDecodedPayload.isLeft()).toBe(true);
+      expect(errorOrDecodedPayload.value).toBeInstanceOf(InvalidTokenError);
+    });
+
+    test('When access token does not exist, should return an error', async () => {
+      // Arrange
+      const token = await tokenService.generateAccessToken('abc1234');
+
+      // Act
+      const errorOrDecodedPayload = await auth.revokeAccessToken(token);
+
+      // Assert
+      expect(errorOrDecodedPayload.isLeft()).toBe(true);
+      expect(errorOrDecodedPayload.value).toBeInstanceOf(InvalidTokenError);
+    });
+
+    test('When and access token exists and is successfully decoded, should delete user session', async () => {
+      // Arrange
+      const userId = 'abc1234';
+      const [accessToken, refreshToken] = await Promise.all([
+        tokenService.generateAccessToken(userId),
+        tokenService.generateRefreshToken(userId),
+      ]);
+      const session = Session.create({ userId, accessToken, refreshToken });
+      await sessionRepository.create(session);
+
+      // Act
+      const errorOrVoid = await auth.revokeAccessToken(accessToken);
+
+      // Assert
+      expect(errorOrVoid.isRight()).toBe(true);
+      expect(errorOrVoid.value).toBeUndefined();
+    });
+  });
 });
