@@ -63,4 +63,22 @@ describe('Auth', () => {
       expect(errorOrDecodedPayload.value).toHaveProperty('userId', userId);
     });
   });
+
+  describe('grantAccessToUser', () => {
+    test('should return the user session', async () => {
+      // Arrange
+      const tokenService = new FakeTokenService();
+      const sessionRepository = new InMemorySessionRepository();
+      const auth = new Auth(tokenService, sessionRepository);
+      const userId = 'abc1234';
+
+      // Act
+      const session = await auth.grantAccessToUser(userId);
+
+      // Assert
+      expect(session.accessToken.length).toBeGreaterThan(0);
+      expect(session.refreshToken.length).toBeGreaterThan(0);
+      expect(session.userId).toEqual(userId);
+    });
+  });
 });
