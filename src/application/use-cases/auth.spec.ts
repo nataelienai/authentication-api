@@ -43,7 +43,7 @@ describe('Auth', () => {
       expect(errorOrDecodedPayload.value).toBeInstanceOf(InvalidTokenError);
     });
 
-    test('When session exists and access token is successfully decoded, should return the decoded payload', async () => {
+    test('When session exists and access token is successfully decoded, should return the user session', async () => {
       // Arrange
       const userId = 'abc1234';
       const [accessToken, refreshToken] = await Promise.all([
@@ -79,6 +79,60 @@ describe('Auth', () => {
       expect(session.accessToken.length).toBeGreaterThan(0);
       expect(session.refreshToken.length).toBeGreaterThan(0);
       expect(session.userId).toEqual(userId);
+    });
+  });
+
+  describe('refreshAccessToken', () => {
+    let tokenService: TokenService;
+    let sessionRepository: SessionRepository;
+    let auth: Auth;
+
+    beforeEach(() => {
+      tokenService = new FakeTokenService();
+      sessionRepository = new InMemorySessionRepository();
+      auth = new Auth(tokenService, sessionRepository);
+    });
+
+    test('When refresh token decodification fails, should return an error', async () => {
+      // Arrange
+      const refreshToken = 'invalid_token';
+
+      // Act
+      const errorOrDecodedPayload = await auth.refreshAccessToken(refreshToken);
+
+      // Assert
+      expect(errorOrDecodedPayload.isLeft()).toBe(true);
+      expect(errorOrDecodedPayload.value).toBeInstanceOf(InvalidTokenError);
+    });
+
+    test('When session does not exist, should return an error', async () => {
+      // Arrange
+      const refreshToken = await tokenService.generateRefreshToken('abc1234');
+
+      // Act
+      const errorOrDecodedPayload = await auth.refreshAccessToken(refreshToken);
+
+      // Assert
+      expect(errorOrDecodedPayload.isLeft()).toBe(true);
+      expect(errorOrDecodedPayload.value).toBeInstanceOf(InvalidTokenError);
+    });
+
+    test('When session exists and refresh token is successfully, should return the new user session', async () => {
+      // Arrange
+      const userId = 'abc1234';
+      const [accessToken, refreshToken] = await Promise.all([
+        tokenService.generateAccessToken(userId),
+        tokenService.generateRefreshToken(userId),
+      ]);
+      const session = Session.create({ userId, accessToken, refreshToken });
+      await sessionRepository.create(session);
+
+      // Act
+      const errorOrDecodedPayload = await auth.refreshAccessToken(refreshToken);
+
+      // Assert
+      expect(errorOrDecodedPayload.isRight()).toBe(true);
+      expect(errorOrDecodedPayload.value).toHaveProperty('userId', userId);
     });
   });
 });
