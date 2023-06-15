@@ -189,4 +189,31 @@ describe('Auth', () => {
       expect(errorOrVoid.value).toBeUndefined();
     });
   });
+
+  describe('revokeAccessFromUser', () => {
+    test('should delete all sessions for given user', async () => {
+      // Arrange
+      const tokenService = new FakeTokenService();
+      const sessionRepository = new InMemorySessionRepository();
+      const auth = new Auth(tokenService, sessionRepository);
+
+      const userId = 'abc1234';
+      const [accessToken, refreshToken] = await Promise.all([
+        tokenService.generateAccessToken(userId),
+        tokenService.generateRefreshToken(userId),
+      ]);
+
+      const session = Session.create({ userId, accessToken, refreshToken });
+      await sessionRepository.create(session);
+
+      // Act
+      await auth.revokeAccessFromUser(userId);
+
+      // Assert
+      const deletedSession = await sessionRepository.findByRefreshToken(
+        refreshToken,
+      );
+      expect(deletedSession).toBeUndefined();
+    });
+  });
 });
