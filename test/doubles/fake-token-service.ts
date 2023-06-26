@@ -10,11 +10,15 @@ export class FakeTokenService implements TokenService {
   private readonly refreshTokenPrefix = 'REFRESH_TOKEN:';
 
   generateAccessToken(userId: string): Promise<string> {
-    return Promise.resolve(this.accessTokenPrefix + userId);
+    return Promise.resolve(
+      `${this.accessTokenPrefix}${Math.random()}:${userId}`,
+    );
   }
 
   generateRefreshToken(userId: string): Promise<string> {
-    return Promise.resolve(this.refreshTokenPrefix + userId);
+    return Promise.resolve(
+      `${this.refreshTokenPrefix}${Math.random()}:${userId}`,
+    );
   }
 
   decodeAccessToken(
@@ -42,7 +46,7 @@ export class FakeTokenService implements TokenService {
       return left(new InvalidTokenError());
     }
 
-    const userId = token.split(prefix)[1];
+    const userId = token.split(':')[2];
 
     return right({ userId });
   }
