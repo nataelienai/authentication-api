@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
+import openApiDocument from '@/docs/openapi.json';
 import { HttpController } from '@/presentation/ports/http-controller';
 import { HttpServer } from '@/presentation/ports/http-server';
 import { HttpRequest } from '@/presentation/ports/http-request';
 import { internalServerError } from '@/presentation/utils/http-responses';
 import { Logger } from '@/infra/logging/logger';
-import swaggerDocument from '../swagger.json';
 
 export class ExpressHttpServer implements HttpServer {
   private readonly app: express.Express;
@@ -18,7 +18,7 @@ export class ExpressHttpServer implements HttpServer {
     this.app.use(
       '/api-docs',
       swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument),
+      swaggerUi.setup(openApiDocument),
     );
   }
 
