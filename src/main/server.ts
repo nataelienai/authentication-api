@@ -9,6 +9,7 @@ import { getDeleteUserController } from './instances/delete-user-controller';
 import { getHttpServer } from './instances/http-server';
 import { getLogger } from './instances/logger';
 import { env } from './env';
+import { getHealthController } from './instances/health-controller';
 
 const { PORT } = env;
 const logger = getLogger();
@@ -16,6 +17,7 @@ const logger = getLogger();
 async function run() {
   // cannot Promise.all because of concurrent database index creation
   const controllers = [
+    getHealthController(),
     await getSignInController(),
     await getSignUpController(),
     await getSignOutController(),
