@@ -40,6 +40,20 @@ describe('Session', () => {
     });
   });
 
+  describe('generateId', () => {
+    test('should return a unique id', () => {
+      // Arrange
+      // Act
+      const id1 = Session.generateId();
+      const id2 = Session.generateId();
+
+      // Assert
+      expect(id1).not.toHaveLength(0);
+      expect(id2).not.toHaveLength(0);
+      expect(id1).not.toBe(id2);
+    });
+  });
+
   describe('set access token', () => {
     test('When given any string, should update the access token', () => {
       // Arrange
