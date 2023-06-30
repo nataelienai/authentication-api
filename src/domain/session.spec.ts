@@ -5,6 +5,7 @@ describe('Session', () => {
     test('When id is not provided, should return the created session with a new id', () => {
       // Arrange
       const session = {
+        id: Session.generateId(),
         accessToken: 'abcdef123456',
         refreshToken: 'fedcba654321',
         userId: 'cbafed321456',

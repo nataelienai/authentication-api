@@ -1,4 +1,3 @@
-import { Optional } from '@/shared/optional';
 import { randomUUID } from 'node:crypto';
 
 interface SessionProps {
@@ -7,8 +6,6 @@ interface SessionProps {
   refreshToken: string;
   userId: string;
 }
-
-type CreateSessionProps = Optional<SessionProps, 'id'>;
 
 export class Session {
   private constructor(private readonly props: SessionProps) {}
@@ -37,11 +34,8 @@ export class Session {
     return this.props.userId;
   }
 
-  static create(props: CreateSessionProps) {
-    return new Session({
-      ...props,
-      id: props.id ?? randomUUID(),
-    });
+  static create(props: SessionProps) {
+    return new Session(props);
   }
 
   static generateId() {
