@@ -43,4 +43,8 @@ export class Session {
       id: props.id ?? randomUUID(),
     });
   }
+
+  static generateId() {
+    return randomUUID();
+  }
 }
