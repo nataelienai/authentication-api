@@ -2,24 +2,28 @@ import { SessionRepository } from '@/application/ports/session-repository';
 import { Session } from '@/domain/session';
 import { ErrorReply, RedisClientType, SchemaFieldTypes } from 'redis';
 
-export class RedisSessionRepository implements SessionRepository {
+export class RedisStackSessionRepository implements SessionRepository {
   private static readonly INDEX_NAME = 'idx:session';
   private static readonly KEY_PREFIX = 'session:';
 
   private constructor(private readonly redis: RedisClientType) {}
 
   static async create(redis: RedisClientType) {
-    const redisSessionRepository = new RedisSessionRepository(redis);
-    await redisSessionRepository.createIndex();
-    return redisSessionRepository;
+    const repository = new RedisStackSessionRepository(redis);
+    await repository.createIndex();
+    return repository;
   }
 
   async create(session: Session) {
-    await this.redis.json.set(RedisSessionRepository.makeKey(session.id), '$', {
-      accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
-      userId: session.userId,
-    });
+    await this.redis.json.set(
+      RedisStackSessionRepository.makeKey(session.id),
+      '$',
+      {
+        accessToken: session.accessToken,
+        refreshToken: session.refreshToken,
+        userId: session.userId,
+      },
+    );
   }
 
   async update(session: Session) {
@@ -28,10 +32,10 @@ export class RedisSessionRepository implements SessionRepository {
 
   async findByRefreshToken(refreshToken: string): Promise<Session | undefined> {
     const escapedRefreshToken =
-      RedisSessionRepository.escapeSpecialCharacters(refreshToken);
+      RedisStackSessionRepository.escapeSpecialCharacters(refreshToken);
 
     const result = await this.redis.ft.search(
-      RedisSessionRepository.INDEX_NAME,
+      RedisStackSessionRepository.INDEX_NAME,
       `@refreshToken:{${escapedRefreshToken}}`,
     );
 
@@ -52,7 +56,7 @@ export class RedisSessionRepository implements SessionRepository {
     }
 
     return Session.create({
-      id: RedisSessionRepository.extractIdFromKey(document.id),
+      id: RedisStackSessionRepository.extractIdFromKey(document.id),
       accessToken: document.value.accessToken,
       refreshToken: document.value.refreshToken,
       userId: document.value.userId,
@@ -61,10 +65,10 @@ export class RedisSessionRepository implements SessionRepository {
 
   async existsByAccessToken(accessToken: string) {
     const escapedAccessToken =
-      RedisSessionRepository.escapeSpecialCharacters(accessToken);
+      RedisStackSessionRepository.escapeSpecialCharacters(accessToken);
 
     const result = await this.redis.ft.search(
-      RedisSessionRepository.INDEX_NAME,
+      RedisStackSessionRepository.INDEX_NAME,
       `@accessToken:{${escapedAccessToken}}`,
     );
 
@@ -73,10 +77,10 @@ export class RedisSessionRepository implements SessionRepository {
 
   async deleteByAccessToken(accessToken: string) {
     const escapedAccessToken =
-      RedisSessionRepository.escapeSpecialCharacters(accessToken);
+      RedisStackSessionRepository.escapeSpecialCharacters(accessToken);
 
     const result = await this.redis.ft.search(
-      RedisSessionRepository.INDEX_NAME,
+      RedisStackSessionRepository.INDEX_NAME,
       `@accessToken:{${escapedAccessToken}}`,
     );
 
@@ -90,10 +94,10 @@ export class RedisSessionRepository implements SessionRepository {
 
   async deleteAllByUserId(userId: string) {
     const escapedUserId =
-      RedisSessionRepository.escapeSpecialCharacters(userId);
+      RedisStackSessionRepository.escapeSpecialCharacters(userId);
 
     const result = await this.redis.ft.search(
-      RedisSessionRepository.INDEX_NAME,
+      RedisStackSessionRepository.INDEX_NAME,
       `@userId:{${escapedUserId}}`,
     );
 
@@ -113,7 +117,7 @@ export class RedisSessionRepository implements SessionRepository {
     }
 
     await this.redis.ft.create(
-      RedisSessionRepository.INDEX_NAME,
+      RedisStackSessionRepository.INDEX_NAME,
       {
         '$.accessToken': {
           type: SchemaFieldTypes.TAG,
@@ -127,13 +131,13 @@ export class RedisSessionRepository implements SessionRepository {
         },
         '$.userId': { type: SchemaFieldTypes.TAG, AS: 'userId' },
       },
-      { ON: 'JSON', PREFIX: RedisSessionRepository.KEY_PREFIX },
+      { ON: 'JSON', PREFIX: RedisStackSessionRepository.KEY_PREFIX },
     );
   }
 
   private async existsIndex() {
     try {
-      await this.redis.ft.info(RedisSessionRepository.INDEX_NAME);
+      await this.redis.ft.info(RedisStackSessionRepository.INDEX_NAME);
     } catch (error) {
       if (error instanceof ErrorReply) {
         return false;
@@ -144,7 +148,7 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   private static makeKey(id: string) {
-    return `${RedisSessionRepository.KEY_PREFIX}${id}`;
+    return `${RedisStackSessionRepository.KEY_PREFIX}${id}`;
   }
 
   private static escapeSpecialCharacters(idOrToken: string) {
@@ -159,6 +163,6 @@ export class RedisSessionRepository implements SessionRepository {
   }
 
   private static extractIdFromKey(key: string) {
-    return key.slice(RedisSessionRepository.KEY_PREFIX.length);
+    return key.slice(RedisStackSessionRepository.KEY_PREFIX.length);
   }
 }
