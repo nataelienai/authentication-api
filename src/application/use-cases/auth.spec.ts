@@ -33,7 +33,7 @@ describe('Auth', () => {
     test('When session does not exist, should return an error', async () => {
       // Arrange
       const userId = 'abc1234';
-      const token = await tokenService.generateAccessToken(userId);
+      const token = await tokenService.generateAccessToken(userId, '1234abc');
 
       // Act
       const errorOrDecodedPayload = await auth.authenticate(token);
@@ -46,11 +46,17 @@ describe('Auth', () => {
     test('When session exists and access token is successfully decoded, should return the user session', async () => {
       // Arrange
       const userId = 'abc1234';
+      const sessionId = Session.generateId();
       const [accessToken, refreshToken] = await Promise.all([
-        tokenService.generateAccessToken(userId),
-        tokenService.generateRefreshToken(userId),
+        tokenService.generateAccessToken(userId, sessionId),
+        tokenService.generateRefreshToken(userId, sessionId),
       ]);
-      const session = Session.create({ userId, accessToken, refreshToken });
+      const session = Session.create({
+        id: sessionId,
+        userId,
+        accessToken,
+        refreshToken,
+      });
       await sessionRepository.create(session);
 
       // Act
@@ -107,7 +113,10 @@ describe('Auth', () => {
 
     test('When session does not exist, should return an error', async () => {
       // Arrange
-      const refreshToken = await tokenService.generateRefreshToken('abc1234');
+      const refreshToken = await tokenService.generateRefreshToken(
+        'abc1234',
+        '1234abc',
+      );
 
       // Act
       const errorOrDecodedPayload = await auth.refreshAccessToken(refreshToken);
@@ -120,11 +129,17 @@ describe('Auth', () => {
     test('When session exists and refresh token is successfully, should return the new user session', async () => {
       // Arrange
       const userId = 'abc1234';
+      const sessionId = Session.generateId();
       const [accessToken, refreshToken] = await Promise.all([
-        tokenService.generateAccessToken(userId),
-        tokenService.generateRefreshToken(userId),
+        tokenService.generateAccessToken(userId, sessionId),
+        tokenService.generateRefreshToken(userId, sessionId),
       ]);
-      const session = Session.create({ userId, accessToken, refreshToken });
+      const session = Session.create({
+        id: sessionId,
+        userId,
+        accessToken,
+        refreshToken,
+      });
       await sessionRepository.create(session);
 
       // Act
@@ -161,7 +176,10 @@ describe('Auth', () => {
 
     test('When access token does not exist, should return an error', async () => {
       // Arrange
-      const token = await tokenService.generateAccessToken('abc1234');
+      const token = await tokenService.generateAccessToken(
+        'abc1234',
+        '1234abc',
+      );
 
       // Act
       const errorOrDecodedPayload = await auth.revokeAccessToken(token);
@@ -174,11 +192,17 @@ describe('Auth', () => {
     test('When and access token exists and is successfully decoded, should delete user session', async () => {
       // Arrange
       const userId = 'abc1234';
+      const sessionId = Session.generateId();
       const [accessToken, refreshToken] = await Promise.all([
-        tokenService.generateAccessToken(userId),
-        tokenService.generateRefreshToken(userId),
+        tokenService.generateAccessToken(userId, sessionId),
+        tokenService.generateRefreshToken(userId, sessionId),
       ]);
-      const session = Session.create({ userId, accessToken, refreshToken });
+      const session = Session.create({
+        id: sessionId,
+        userId,
+        accessToken,
+        refreshToken,
+      });
       await sessionRepository.create(session);
 
       // Act
@@ -198,12 +222,18 @@ describe('Auth', () => {
       const auth = new Auth(tokenService, sessionRepository);
 
       const userId = 'abc1234';
+      const sessionId = Session.generateId();
       const [accessToken, refreshToken] = await Promise.all([
-        tokenService.generateAccessToken(userId),
-        tokenService.generateRefreshToken(userId),
+        tokenService.generateAccessToken(userId, sessionId),
+        tokenService.generateRefreshToken(userId, sessionId),
       ]);
 
-      const session = Session.create({ userId, accessToken, refreshToken });
+      const session = Session.create({
+        id: sessionId,
+        userId,
+        accessToken,
+        refreshToken,
+      });
       await sessionRepository.create(session);
 
       // Act

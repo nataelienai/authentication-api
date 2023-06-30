@@ -15,20 +15,22 @@ export class JwtTokenService implements TokenService {
     private readonly refreshTokenSecret: string,
   ) {}
 
-  generateAccessToken(userId: string) {
+  generateAccessToken(userId: string, sessionId: string) {
     return Promise.resolve(
       JwtTokenService.generateToken(
         userId,
+        sessionId,
         this.accessTokenSecret,
         JwtTokenService.ACCESS_TOKEN_EXPIRES_IN,
       ),
     );
   }
 
-  generateRefreshToken(userId: string) {
+  generateRefreshToken(userId: string, sessionId: string) {
     return Promise.resolve(
       JwtTokenService.generateToken(
         userId,
+        sessionId,
         this.refreshTokenSecret,
         JwtTokenService.REFRESH_TOKEN_EXPIRES_IN,
       ),
@@ -58,10 +60,11 @@ export class JwtTokenService implements TokenService {
 
   private static generateToken(
     userId: string,
+    sessionId: string,
     secret: string,
     expiresIn: string,
   ) {
-    return jwt.sign({}, secret, {
+    return jwt.sign({ sessionId }, secret, {
       subject: userId,
       expiresIn,
     });
@@ -79,10 +82,14 @@ export class JwtTokenService implements TokenService {
       return left(new InvalidTokenError());
     }
 
-    if (!(jwtPayload instanceof Object) || !jwtPayload.sub) {
+    if (
+      !(jwtPayload instanceof Object) ||
+      !jwtPayload.sub ||
+      typeof jwtPayload.sessionId !== 'string'
+    ) {
       return left(new InvalidTokenError());
     }
 
-    return right({ userId: jwtPayload.sub });
+    return right({ userId: jwtPayload.sub, sessionId: jwtPayload.sessionId });
   }
 }

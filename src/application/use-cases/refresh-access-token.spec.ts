@@ -35,9 +35,17 @@ describe('Refresh Access Token', () => {
   test('When refresh token is valid, return session with new access and refresh tokens', async () => {
     // Arrange
     const userId = 'fake_id';
-    const accessToken = await tokenService.generateAccessToken(userId);
-    const refreshToken = await tokenService.generateRefreshToken(userId);
-    const session = Session.create({ accessToken, refreshToken, userId });
+    const sessionId = 'fake_session_id';
+    const [accessToken, refreshToken] = await Promise.all([
+      tokenService.generateAccessToken(userId, sessionId),
+      tokenService.generateRefreshToken(userId, sessionId),
+    ]);
+    const session = Session.create({
+      id: sessionId,
+      accessToken,
+      refreshToken,
+      userId,
+    });
     await sessionRepository.create(session);
 
     // Act

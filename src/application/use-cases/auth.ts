@@ -30,12 +30,15 @@ export class Auth {
   }
 
   async grantAccessToUser(userId: string): Promise<Session> {
+    const sessionId = Session.generateId();
+
     const [accessToken, refreshToken] = await Promise.all([
-      this.tokenService.generateAccessToken(userId),
-      this.tokenService.generateRefreshToken(userId),
+      this.tokenService.generateAccessToken(userId, sessionId),
+      this.tokenService.generateRefreshToken(userId, sessionId),
     ]);
 
     const session = Session.create({
+      id: sessionId,
       accessToken,
       refreshToken,
       userId,
@@ -63,8 +66,8 @@ export class Auth {
 
     const { userId } = errorOrDecodedPayload.value;
     const [newAccessToken, newRefreshToken] = await Promise.all([
-      this.tokenService.generateAccessToken(userId),
-      this.tokenService.generateRefreshToken(userId),
+      this.tokenService.generateAccessToken(userId, session.id),
+      this.tokenService.generateRefreshToken(userId, session.id),
     ]);
 
     session.accessToken = newAccessToken;

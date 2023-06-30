@@ -47,9 +47,17 @@ describe('Delete User', () => {
   test('When user is not found, return an error', async () => {
     // Arrange
     const userId = 'fake_id';
-    const accessToken = await tokenService.generateAccessToken(userId);
-    const refreshToken = await tokenService.generateRefreshToken(userId);
-    const session = Session.create({ accessToken, refreshToken, userId });
+    const sessionId = 'fake_session_id';
+    const [accessToken, refreshToken] = await Promise.all([
+      tokenService.generateAccessToken(userId, sessionId),
+      tokenService.generateRefreshToken(userId, sessionId),
+    ]);
+    const session = Session.create({
+      id: sessionId,
+      accessToken,
+      refreshToken,
+      userId,
+    });
     await sessionRepository.create(session);
 
     // Act
@@ -70,9 +78,13 @@ describe('Delete User', () => {
     }).value as User;
     await userRepository.create(user);
 
-    const accessToken = await tokenService.generateAccessToken(user.id);
-    const refreshToken = await tokenService.generateRefreshToken(user.id);
+    const sessionId = Session.generateId();
+    const [accessToken, refreshToken] = await Promise.all([
+      tokenService.generateAccessToken(user.id, sessionId),
+      tokenService.generateRefreshToken(user.id, sessionId),
+    ]);
     const session = Session.create({
+      id: sessionId,
       accessToken,
       refreshToken,
       userId: user.id,

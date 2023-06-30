@@ -6,18 +6,18 @@ import {
 import { Either, left, right } from '@/shared/either';
 
 export class FakeTokenService implements TokenService {
-  private readonly accessTokenPrefix = 'ACCESS_TOKEN:';
-  private readonly refreshTokenPrefix = 'REFRESH_TOKEN:';
+  private readonly accessTokenPrefix = 'ACCESS_TOKEN';
+  private readonly refreshTokenPrefix = 'REFRESH_TOKEN';
 
-  generateAccessToken(userId: string): Promise<string> {
+  generateAccessToken(userId: string, sessionId: string): Promise<string> {
     return Promise.resolve(
-      `${this.accessTokenPrefix}${Math.random()}:${userId}`,
+      `${this.accessTokenPrefix}:${Math.random()}:${userId}:${sessionId}`,
     );
   }
 
-  generateRefreshToken(userId: string): Promise<string> {
+  generateRefreshToken(userId: string, sessionId: string): Promise<string> {
     return Promise.resolve(
-      `${this.refreshTokenPrefix}${Math.random()}:${userId}`,
+      `${this.refreshTokenPrefix}:${Math.random()}:${userId}:${sessionId}`,
     );
   }
 
@@ -46,8 +46,9 @@ export class FakeTokenService implements TokenService {
       return left(new InvalidTokenError());
     }
 
-    const userId = token.split(':')[2];
+    // eslint-disable-next-line unicorn/no-unreadable-array-destructuring
+    const [, , userId, sessionId] = token.split(':');
 
-    return right({ userId });
+    return right({ userId, sessionId });
   }
 }
