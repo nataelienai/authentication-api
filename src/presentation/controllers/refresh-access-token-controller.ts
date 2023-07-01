@@ -19,7 +19,7 @@ export class RefreshAccessTokenController extends Controller<
 > {
   private readonly httpRoute: HttpRoute = {
     method: 'post',
-    path: '/token',
+    path: '/refresh-access-token',
   };
 
   constructor(
