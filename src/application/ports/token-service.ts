@@ -15,5 +15,4 @@ export interface TokenService {
   decodeRefreshToken(
     token: string,
   ): Promise<Either<InvalidTokenError, DecodedPayload>>;
-  isAccessTokenValid(token: string): Promise<boolean>;
 }

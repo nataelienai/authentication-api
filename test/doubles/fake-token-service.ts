@@ -33,10 +33,6 @@ export class FakeTokenService implements TokenService {
     return Promise.resolve(this.decode(token, this.refreshTokenPrefix));
   }
 
-  isAccessTokenValid(token: string): Promise<boolean> {
-    return Promise.resolve(token.includes(this.accessTokenPrefix));
-  }
-
   // eslint-disable-next-line class-methods-use-this
   private decode(
     token: string,

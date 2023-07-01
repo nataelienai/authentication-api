@@ -53,11 +53,6 @@ export class JwtTokenService implements TokenService {
     );
   }
 
-  async isAccessTokenValid(token: string) {
-    const errorOrDecodedPayload = await this.decodeAccessToken(token);
-    return errorOrDecodedPayload.isRight();
-  }
-
   private static generateToken(
     userId: string,
     sessionId: string,
