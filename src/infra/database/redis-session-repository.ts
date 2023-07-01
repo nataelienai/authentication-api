@@ -26,7 +26,9 @@ export class RedisSessionRepository implements SessionRepository {
 
   async findById(sessionId: string): Promise<Session | undefined> {
     const [key] = await this.getAllKeysBy({ sessionId });
-    if (!key) return undefined;
+    if (!key) {
+      return undefined;
+    }
 
     const result = await this.redis.hGetAll(key);
     return Session.create({
@@ -44,14 +46,18 @@ export class RedisSessionRepository implements SessionRepository {
 
   async deleteById(sessionId: string): Promise<void> {
     const [key] = await this.getAllKeysBy({ sessionId });
-    if (!key) return;
+    if (!key) {
+      return;
+    }
 
     await this.redis.unlink(key);
   }
 
   async deleteAllByUserId(userId: string): Promise<void> {
     const keys = await this.getAllKeysBy({ userId });
-    if (keys.length === 0) return;
+    if (keys.length === 0) {
+      return;
+    }
 
     await this.redis.unlink(keys);
   }
