@@ -7,6 +7,10 @@
   },
   "servers": [
     {
+      "url": "/",
+      "description": "Current API server"
+    },
+    {
       "url": "http://localhost:3000/",
       "description": "API development server"
     }
