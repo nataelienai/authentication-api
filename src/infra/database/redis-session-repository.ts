@@ -5,7 +5,10 @@ import { SessionRepository } from '@/application/ports/session-repository';
 export class RedisSessionRepository implements SessionRepository {
   private static readonly KEY_PREFIX = 'session';
 
-  constructor(private readonly redis: RedisClientType) {}
+  constructor(
+    private readonly redis: RedisClientType,
+    private readonly sessionExpirationInSeconds: number,
+  ) {}
 
   async create(session: Session): Promise<void> {
     const key = RedisSessionRepository.makeKey(session.id, session.userId);
@@ -14,6 +17,7 @@ export class RedisSessionRepository implements SessionRepository {
       refreshToken: session.refreshToken,
       userId: session.userId,
     });
+    await this.redis.expire(key, this.sessionExpirationInSeconds);
   }
 
   async update(session: Session): Promise<void> {
