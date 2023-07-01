@@ -9,6 +9,8 @@ export function getTokenService() {
     tokenService = new JwtTokenService(
       env.ACCESS_TOKEN_SECRET,
       env.REFRESH_TOKEN_SECRET,
+      env.ACCESS_TOKEN_EXPIRATION_IN_SECONDS,
+      env.REFRESH_TOKEN_EXPIRATION_IN_SECONDS,
     );
   }
   return tokenService;

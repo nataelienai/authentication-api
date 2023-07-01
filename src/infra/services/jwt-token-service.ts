@@ -7,12 +7,11 @@ import {
 import { Either, left, right } from '@/shared/either';
 
 export class JwtTokenService implements TokenService {
-  private static readonly ACCESS_TOKEN_EXPIRES_IN = '1h';
-  private static readonly REFRESH_TOKEN_EXPIRES_IN = '30d';
-
   constructor(
     private readonly accessTokenSecret: string,
     private readonly refreshTokenSecret: string,
+    private readonly accessTokenExpirationInSeconds: number,
+    private readonly refreshTokenExpirationInSeconds: number,
   ) {}
 
   generateAccessToken(userId: string, sessionId: string) {
@@ -21,7 +20,7 @@ export class JwtTokenService implements TokenService {
         userId,
         sessionId,
         this.accessTokenSecret,
-        JwtTokenService.ACCESS_TOKEN_EXPIRES_IN,
+        this.accessTokenExpirationInSeconds,
       ),
     );
   }
@@ -32,7 +31,7 @@ export class JwtTokenService implements TokenService {
         userId,
         sessionId,
         this.refreshTokenSecret,
-        JwtTokenService.REFRESH_TOKEN_EXPIRES_IN,
+        this.refreshTokenExpirationInSeconds,
       ),
     );
   }
@@ -57,11 +56,11 @@ export class JwtTokenService implements TokenService {
     userId: string,
     sessionId: string,
     secret: string,
-    expiresIn: string,
+    expirationInSeconds: number,
   ) {
     return jwt.sign({ sessionId }, secret, {
       subject: userId,
-      expiresIn,
+      expiresIn: expirationInSeconds,
     });
   }
 
