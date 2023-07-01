@@ -12,7 +12,7 @@
     },
     {
       "url": "http://localhost:3000/",
-      "description": "API development server"
+      "description": "API local server"
     }
   ],
   "tags": [
