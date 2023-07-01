@@ -13,14 +13,16 @@ export class Auth {
   async authenticate(
     accessToken: string,
   ): Promise<Either<InvalidTokenError, DecodedPayload>> {
-    const [errorOrDecodedPayload, sessionExists] = await Promise.all([
-      this.tokenService.decodeAccessToken(accessToken),
-      this.sessionRepository.existsByAccessToken(accessToken),
-    ]);
+    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+      accessToken,
+    );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
     }
+
+    const { sessionId } = errorOrDecodedPayload.value;
+    const sessionExists = await this.sessionRepository.existsById(sessionId);
 
     if (!sessionExists) {
       return left(new InvalidTokenError());
@@ -51,23 +53,24 @@ export class Auth {
   async refreshAccessToken(
     refreshToken: string,
   ): Promise<Either<InvalidTokenError, Session>> {
-    const [errorOrDecodedPayload, session] = await Promise.all([
-      this.tokenService.decodeRefreshToken(refreshToken),
-      this.sessionRepository.findByRefreshToken(refreshToken),
-    ]);
+    const errorOrDecodedPayload = await this.tokenService.decodeRefreshToken(
+      refreshToken,
+    );
 
     if (errorOrDecodedPayload.isLeft()) {
       return left(errorOrDecodedPayload.value);
     }
 
+    const { userId, sessionId } = errorOrDecodedPayload.value;
+    const session = await this.sessionRepository.findById(sessionId);
+
     if (!session) {
       return left(new InvalidTokenError());
     }
 
-    const { userId } = errorOrDecodedPayload.value;
     const [newAccessToken, newRefreshToken] = await Promise.all([
-      this.tokenService.generateAccessToken(userId, session.id),
-      this.tokenService.generateRefreshToken(userId, session.id),
+      this.tokenService.generateAccessToken(userId, sessionId),
+      this.tokenService.generateRefreshToken(userId, sessionId),
     ]);
 
     session.accessToken = newAccessToken;
@@ -80,16 +83,22 @@ export class Auth {
   async revokeAccessToken(
     accessToken: string,
   ): Promise<Either<InvalidTokenError, void>> {
-    const [isTokenValid, sessionExists] = await Promise.all([
-      this.tokenService.isAccessTokenValid(accessToken),
-      this.sessionRepository.existsByAccessToken(accessToken),
-    ]);
+    const errorOrDecodedPayload = await this.tokenService.decodeAccessToken(
+      accessToken,
+    );
 
-    if (!isTokenValid || !sessionExists) {
+    if (errorOrDecodedPayload.isLeft()) {
+      return left(errorOrDecodedPayload.value);
+    }
+
+    const { sessionId } = errorOrDecodedPayload.value;
+    const sessionExists = await this.sessionRepository.existsById(sessionId);
+
+    if (!sessionExists) {
       return left(new InvalidTokenError());
     }
 
-    await this.sessionRepository.deleteByAccessToken(accessToken);
+    await this.sessionRepository.deleteById(sessionId);
 
     // eslint-disable-next-line unicorn/no-useless-undefined
     return right(undefined);

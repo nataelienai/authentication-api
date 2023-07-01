@@ -1,14 +1,12 @@
 import { SessionRepository } from '@/application/ports/session-repository';
-import { RedisStackSessionRepository } from '@/infra/database/redis-stack-session-repository';
+import { RedisSessionRepository } from '@/infra/database/redis-session-repository';
 import { getRedisClient } from './redis';
 
 let sessionRepository: SessionRepository;
 
 export async function getSessionRepository() {
   if (!sessionRepository) {
-    sessionRepository = await RedisStackSessionRepository.create(
-      await getRedisClient(),
-    );
+    sessionRepository = new RedisSessionRepository(await getRedisClient());
   }
   return sessionRepository;
 }

@@ -6,52 +6,35 @@ export class InMemorySessionRepository implements SessionRepository {
 
   create(session: Session): Promise<void> {
     this.sessions.push(session);
-
     return Promise.resolve();
   }
 
   update(session: Session): Promise<void> {
-    const index = this.sessions.findIndex(
-      (savedSession) => savedSession.id === session.id,
-    );
-
+    const index = this.sessions.findIndex((s) => s.id === session.id);
     if (index >= 0) {
       // eslint-disable-next-line security/detect-object-injection
       this.sessions[index] = session;
     }
-
     return Promise.resolve();
   }
 
-  findByRefreshToken(refreshToken: string): Promise<Session | undefined> {
-    const session = this.sessions.find(
-      (savedSession) => savedSession.refreshToken === refreshToken,
-    );
-
+  findById(sessionId: string): Promise<Session | undefined> {
+    const session = this.sessions.find((s) => s.id === sessionId);
     return Promise.resolve(session);
   }
 
-  existsByAccessToken(accessToken: string): Promise<boolean> {
-    const session = this.sessions.some(
-      (savedSession) => savedSession.accessToken === accessToken,
-    );
-
-    return Promise.resolve(session);
+  existsById(sessionId: string): Promise<boolean> {
+    const sessionExists = this.sessions.some((s) => s.id === sessionId);
+    return Promise.resolve(sessionExists);
   }
 
-  deleteByAccessToken(accessToken: string): Promise<void> {
-    this.sessions = this.sessions.filter(
-      (session) => session.accessToken !== accessToken,
-    );
-
+  deleteById(sessionId: string): Promise<void> {
+    this.sessions = this.sessions.filter((s) => s.id !== sessionId);
     return Promise.resolve();
   }
 
   deleteAllByUserId(userId: string): Promise<void> {
-    this.sessions = this.sessions.filter(
-      (session) => session.userId !== userId,
-    );
-
+    this.sessions = this.sessions.filter((s) => s.userId !== userId);
     return Promise.resolve();
   }
 }

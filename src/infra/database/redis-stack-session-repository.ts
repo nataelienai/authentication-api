@@ -1,8 +1,7 @@
-import { SessionRepository } from '@/application/ports/session-repository';
 import { Session } from '@/domain/session';
 import { ErrorReply, RedisClientType, SchemaFieldTypes } from 'redis';
 
-export class RedisStackSessionRepository implements SessionRepository {
+export class RedisStackSessionRepository {
   private static readonly INDEX_NAME = 'idx:session';
   private static readonly KEY_PREFIX = 'session:';
 

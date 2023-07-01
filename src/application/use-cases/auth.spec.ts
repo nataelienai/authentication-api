@@ -240,9 +240,7 @@ describe('Auth', () => {
       await auth.revokeAccessFromUser(userId);
 
       // Assert
-      const deletedSession = await sessionRepository.findByRefreshToken(
-        refreshToken,
-      );
+      const deletedSession = await sessionRepository.findById(sessionId);
       expect(deletedSession).toBeUndefined();
     });
   });

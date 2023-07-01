@@ -1,7 +1,8 @@
 import { RedisClientType } from 'redis';
 import { Session } from '@/domain/session';
+import { SessionRepository } from '@/application/ports/session-repository';
 
-export class RedisSessionRepository {
+export class RedisSessionRepository implements SessionRepository {
   private static readonly KEY_PREFIX = 'session';
 
   constructor(private readonly redis: RedisClientType) {}
