@@ -17,7 +17,9 @@
     "test:watch": "jest --watch --runInBand",
     "test:coverage": "jest --coverage --runInBand",
     "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand",
+    "type-check": "npx tsc",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint . --report-unused-disable-directives",
     "lint:fix": "npm run lint -- --fix"
   },
